@@ -1808,7 +1808,7 @@ Main:AddToggle({
 
 local developerUsernames = {
     ["youssef126608"] = true,
-    ["udgjjjgcv"] = true
+    ["udgjjjgcv"] = true,
     ["jakakqowqpq"] = true
 }
 
