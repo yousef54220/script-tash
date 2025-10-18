@@ -1141,9 +1141,7 @@ Tab6:AddButton({Name = "Invisibility Script", Callback = function() safeLoad("ht
 Tab6:AddButton({Name = "Shadow Executor", Callback = function() safeLoad("https://raw.githubusercontent.com/youssefhesham542/Y2-Hub/main/Shadow%20Executor") end})
 Tab6:AddButton({Name = "Shadow Fly", Callback = function() safeLoad("https://raw.githubusercontent.com/youssefhesham542/Y2-Hub/main/Shadow%20Fly2") end})
 
---========================--
---       تاب الاسكنات      --
---========================--
+
 
 local Players = game:GetService("Players")
 local Remotes = game:GetService("ReplicatedStorage"):WaitForChild("Remotes")
@@ -1928,48 +1926,223 @@ game:GetService("ReplicatedStorage").RE:FindFirstChild("1Too1l"):InvokeServer(un
 })
 
 
--- =========================
--- تاب الإشعارات فقط
--- =========================
-local notifyTab = Window:MakeTab({"الإشعارات", "rbxassetid://97937665580776"})
+Tab = Window:MakeTab({
+    Name = "الاشعارات و السيرفر",
+    Icon = "rbxassetid://10734949856",
+    PremiumOnly = false
+})
 
-local notifyEnabled = false
+local Section = Tab:AddSection({
+    Name = "<font color='rgb(255, 0, 0)'>السيـرفر</font>"
+})
 
--- Toggle لتفعيل/إيقاف الإشعارات
-notifyTab:AddToggle({
-    Name = "الإشعارات عند دخول وخروج اللاعبين",
+_G.NotificationsEnabled = true
+
+local function ShowNotification(title, text, duration)
+    if _G.NotificationsEnabled then
+        game:GetService("StarterGui"):SetCore("SendNotification", {
+            Title = title,
+            Text = text,
+            Duration = duration or 3
+        })
+    end
+end
+
+game.Players.PlayerAdded:Connect(function(player)
+    ShowNotification("لقـد دخـل :", player.Name .. "")
+end)
+
+game.Players.PlayerRemoving:Connect(function(player)
+    ShowNotification("لـقـد خـرج :", player.Name .. "")
+end)
+
+Tab:AddToggle({
+    Name = "اشعـارات عنـد خروج لاعـب او دخـوله",
     Default = false,
-    Callback = function(state)
-        notifyEnabled = state
-        print("الإشعارات: "..tostring(state))
+    Callback = function(Value)
+        _G.NotificationsEnabled = Value
     end
 })
 
+Tab:AddButton({
+    Name = "أعـد دخـول السيـرفر",
+    Description = "",
+    Callback = function()
+        local ts = game:GetService("TeleportService")
+        local p = game:GetService("Players").LocalPlayer
+        ts:Teleport(game.PlaceId, p)
+    end
+})
+
+local HttpService = game:GetService("HttpService")
+local TeleportService = game:GetService("TeleportService")
 local Players = game:GetService("Players")
+local placeId = game.PlaceId
+local player = Players.LocalPlayer
 
--- Function لإرسال الإشعار
-local function sendNotification(title, text)
-    game.StarterGui:SetCore("SendNotification", {
-        Title = title,
-        Text = text,
-        Duration = 3,
-        Icon = "rbxassetid://97937665580776"
-    })
-end
-
--- حدث دخول لاعب
-Players.PlayerAdded:Connect(function(player)
-    if notifyEnabled then
-        sendNotification("اشعار", "لقد دخل اللاعب "..player.Name.." إلى السيرفر")
+Tab:AddButton({
+    Name = "ادخـل سيـرفر جـديد",
+    Description = "",
+    Callback = function()
+        local success, servers = pcall(function()
+            return HttpService:JSONDecode(game:HttpGet("https://games.roblox.com/v1/games/" .. placeId .. "/servers/Public?sortOrder=Asc&limit=100"))
+        end)
+        if (success and servers and servers.data) then
+            for _, server in pairs(servers.data) do
+                if ((server.playing < server.maxPlayers) and (server.id ~= game.JobId)) then
+                    TeleportService:TeleportToPlaceInstance(placeId, server.id, player)
+                    break
+                end
+            end
+        else
+            local Sound = Instance.new("Sound", game:GetService("SoundService"))
+            Sound.SoundId = "rbxassetid://8183296024"
+            Sound:Play()
+            game.StarterGui:SetCore("SendNotification", {
+                Title = "أشـعار !",
+                Text = "فشـل العـثور على سيـرفر",
+                Duration = 3,
+                Icon = "rbxassetid://138348054993274"
+            })
+        end
     end
-end)
+})
 
--- حدث خروج لاعب
-Players.PlayerRemoving:Connect(function(player)
-    if notifyEnabled then
-        sendNotification("اشعار", "لقد خرج اللاعب "..player.Name.." من السيرفر")
+Tab:AddButton({
+    Name = "ادخـل سيـرفر شـبه فـارغ",
+    Description = "",
+    Callback = function()
+        local success, servers = pcall(function()
+            return HttpService:JSONDecode(game:HttpGet("https://games.roblox.com/v1/games/" .. placeId .. "/servers/Public?sortOrder=Asc&limit=100"))
+        end)
+        if (success and servers and servers.data) then
+            for _, server in pairs(servers.data) do
+                if (server.playing <= 5) then
+                    TeleportService:TeleportToPlaceInstance(placeId, server.id, player)
+                    break
+                end
+            end
+        else
+            local Sound = Instance.new("Sound", game:GetService("SoundService"))
+            Sound.SoundId = "rbxassetid://8183296024"
+            Sound:Play()
+            game.StarterGui:SetCore("SendNotification", {
+                Title = "أشـعار !",
+                Text = "فشـل العـثور على سيـرفر",
+                Duration = 3,
+                Icon = "rbxassetid://138348054993274"
+            })
+        end
     end
-end)
+})
+
+Tab:AddButton({
+    Name = "أنسـخ رقـم سيـرفرك",
+    Description = "",
+    Callback = function()
+        if setclipboard then
+            setclipboard(game.JobId)
+            local Sound = Instance.new("Sound", game:GetService("SoundService"))
+            Sound.SoundId = "rbxassetid://8183296024"
+Sound:Play()
+            game.StarterGui:SetCore("SendNotification", {
+                Title = "أشـعار !",
+                Text = "تـم النسـخ",
+                Duration = 3,
+                Icon = "rbxassetid://138348054993274"
+            })
+        else
+            local Sound = Instance.new("Sound", game:GetService("SoundService"))
+            Sound.SoundId = "rbxassetid://8183296024"
+            Sound:Play()
+            game.StarterGui:SetCore("SendNotification", {
+                Title = "أشـعار !",
+                Text = "لـم يـتم النسـخ بسـبب حـدوث خـطأ",
+                Duration = 3,
+                Icon = "rbxassetid://138348054993274"
+            })
+        end
+    end
+})
+
+local serverId = ""
+
+Tab:AddTextbox({
+    Name = "ادخـل رقـم سيـرفر",
+    Default = "",
+    TextDisappear = true,
+    Callback = function(Value)
+        serverId = Value
+    end
+})
+
+Tab:AddButton({
+    Name = "انتـقل للسيـرفر",
+    Description = "",
+    Callback = function()
+        if (serverId and (serverId ~= "")) then
+            TeleportService:TeleportToPlaceInstance(placeId, serverId, player)
+        else
+            local Sound = Instance.new("Sound", game:GetService("SoundService"))
+            Sound.SoundId = "rbxassetid://8183296024"
+            Sound:Play()
+            game.StarterGui:SetCore("SendNotification", {
+                Title = "أشـعار !",
+                Text = "اكـتب رقـم سيـرفر اولاً",
+                Duration = 3,
+                Icon = "rbxassetid://138348054993274"
+            })
+        end
+    end
+})
+
+local Section = Tab:AddSection({
+    Name = "<font color='rgb(255, 0, 0)'>تـنو؏</font>"
+})
+
+Tab:AddButton({
+    Name = "اقـتل نفـسك | Rest",
+    Description = "",
+    Callback = function()
+        game.Players.LocalPlayer.Character.Humanoid.Health = 0
+    end
+})
+
+Tab:AddButton({
+    Name = "أخـذ كنـبه",
+    Description = "",
+    Callback = function()
+        local args = { [1] = "PickingTools", [2] = "Couch" }
+        game:GetService("ReplicatedStorage").RE:FindFirstChild("1Too1l"):InvokeServer(unpack(args))
+    end
+})
+
+Tab:AddButton({
+    Name = "احـذف الاشـياء الي بـيدك",
+    Description = "",
+    Callback = function()
+        local args = { [1] = "ClearAllTools" }
+        game:GetService("ReplicatedStorage").RE:FindFirstChild("1Clea1rTool1s"):FireServer(unpack(args))
+    end
+})
+
+Tab:AddButton({
+    Name = "انـزع مـلابسك",
+    Description = "",
+    Callback = function()
+        local args = { [1] = 2248242028 }
+        game:GetService("ReplicatedStorage").Remotes.Wear:InvokeServer(unpack(args))
+        wait(0.5)
+        local args = { [1] = 2547392639 }
+        game:GetService("ReplicatedStorage").Remotes.Wear:InvokeServer(unpack(args))
+        wait(1)
+        local args = { [1] = 2248242028 }
+        game:GetService("ReplicatedStorage").Remotes.Wear:InvokeServer(unpack(args))
+        wait(0.5)
+        local args = { [1] = 2547392639 }
+        game:GetService("ReplicatedStorage").Remotes.Wear:InvokeServer(unpack(args))
+    end
+})
 
 local Main = Window:MakeTab({"اغاني المجانية", "rbxassetid://97937665580776"})
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
