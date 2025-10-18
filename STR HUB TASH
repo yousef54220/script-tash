@@ -724,7 +724,7 @@ end)
 
 
 
-Tab = Window:MakeTab({"المتعة","rbxassetid://97937665580776"})
+Tab = Window:MakeTab({"السبامات و الازعاج","rbxassetid://97937665580776"})
 
 local TextSave = ""
 local Speed = 0.5
