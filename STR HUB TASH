@@ -4597,3 +4597,16 @@ end
 
 })
 
+local Notification = loadstring(game:HttpGet("https://pastebin.com/raw/Ez5G36pt"))();
+local Notify = Notification.Notify;
+
+Notify({
+Description = "تم اضافه اشياء قويه جدا و نشكركم علي الاستخدام";
+Title = "System STR";
+Duration = 5;
+
+});
+
+-- كس خالت الي بيسرب هاد السكريت بالمستقبل 
+-- انيك عرضك
+-- by Shadow and Mohammed 
