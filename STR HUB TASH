@@ -1927,7 +1927,41 @@ game:GetService("ReplicatedStorage").RE:FindFirstChild("1Too1l"):InvokeServer(un
 
 
 
+local notifyTab = Window:MakeTab({"الإشعارات", "rbxassetid://97937665580776"})
 
+local notifyEnabled = false
+
+notifyTab:AddToggle({
+Name = "الإشعارات عند دخول وخروج اللاعبين",
+Default = false,
+Callback = function(state)
+notifyEnabled = state
+print("الإشعارات: "..tostring(state))
+end
+})
+
+local Players = game:GetService("Players")
+
+local function sendNotification(title, text)
+game.StarterGui:SetCore("SendNotification", {
+Title = title,
+Text = text,
+Duration = 3,
+Icon = "rbxassetid://97937665580776"
+})
+end
+
+Players.PlayerAdded:Connect(function(player)
+if notifyEnabled then
+sendNotification("اشعار", "لقد دخل اللاعب "..player.Name.." إلى السيرفر")
+end
+end)
+
+Players.PlayerRemoving:Connect(function(player)
+if notifyEnabled then
+sendNotification("اشعار", "لقد خرج اللاعب "..player.Name.." من السيرفر")
+end
+end)
 
 
 local Main = Window:MakeTab({"اغاني المجانية", "rbxassetid://97937665580776"})
