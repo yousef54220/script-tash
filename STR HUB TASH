@@ -4503,105 +4503,97 @@ FunTab:AddToggle({
 })
 
 
-local SkyTab = Window:MakeTab({
-    Title = " تخريب السماء (تحت التطوير) ",
-    Icon = "rbxassetid://97937665580776"
+local Tab20 = Window:MakeTab({
+Title = " تخريب السماء (تحت التطوير) ",
+Icon = "rbxassetid://97937665580776"
 })
 
-SkyTab:AddButton({
-    Name = "تخريب سماء Skiliton نادر",
-    Callback = function()
-        local imageOne = "http://www.roblox.com/asset/?id=169585459"
-        local imageTwo = "http://www.roblox.com/asset/?id=169585475"
-        local imageThree = "http://www.roblox.com/asset/?id=169585485"
-        local imageFour = "http://www.roblox.com/asset/?id=169585502"
-        local imageFive = "http://www.roblox.com/asset/?id=169585515"
-        local imageSix = "http://www.roblox.com/asset/?id=169585502"
-        local imageSeven = "http://www.roblox.com/asset/?id=169585485"
-        local imageEight = "http://www.roblox.com/asset/?id=169585475"
+Tab20:AddButton({
+Name = "تخريب سماء Skiliton نادر",
+Callback = function()
+local imageOne = "http://www.roblox.com/asset/?id=169585459"
+local imageTwo = "http://www.roblox.com/asset/?id=169585475"
+local imageThree = "http://www.roblox.com/asset/?id=169585485"
+local imageFour = "http://www.roblox.com/asset/?id=169585502"
+local imageFive = "http://www.roblox.com/asset/?id=169585515"
+local imageSix = "http://www.roblox.com/asset/?id=169585502"
+local imageSeven = "http://www.roblox.com/asset/?id=169585485"
+local imageEight = "http://www.roblox.com/asset/?id=169585475"
 
-        local Spooky = Instance.new("Sound", workspace)
-        Spooky.Name = "Spooky"
-        Spooky.SoundId = "rbxassetid://174270407"
-        Spooky.Volume = 15
-        Spooky.Looped = true
-        Spooky:Play()
+local Spooky = Instance.new("Sound", workspace)  
+    Spooky.Name = "Spooky"  
+    Spooky.SoundId = "rbxassetid://174270407"  
+    Spooky.Volume = 15  
+    Spooky.Looped = true  
+    Spooky:Play()  
 
-        local Sky = Instance.new("Sky", game.Lighting)
-        Sky.SkyboxBk = imageOne
-        Sky.SkyboxDn = imageOne
-        Sky.SkyboxFt = imageOne
-        Sky.SkyboxLf = imageOne
-        Sky.SkyboxRt = imageOne
-        Sky.SkyboxUp = imageOne
+    local Sky = Instance.new("Sky", game.Lighting)  
+    Sky.SkyboxBk = imageOne  
+    Sky.SkyboxDn = imageOne  
+    Sky.SkyboxFt = imageOne  
+    Sky.SkyboxLf = imageOne  
+    Sky.SkyboxRt = imageOne  
+    Sky.SkyboxUp = imageOne  
 
-        while true do
-            Sky.SkyboxBk = imageOne
-            Sky.SkyboxDn = imageOne
-            Sky.SkyboxFt = imageOne
-            Sky.SkyboxLf = imageOne
-            Sky.SkyboxRt = imageOne
-            Sky.SkyboxUp = imageOne
-            task.wait(0.15)
-            Sky.SkyboxBk = imageTwo
-            Sky.SkyboxDn = imageTwo
-            Sky.SkyboxFt = imageTwo
-            Sky.SkyboxLf = imageTwo
-            Sky.SkyboxRt = imageTwo
-            Sky.SkyboxUp = imageTwo
-            task.wait(0.15)
-            Sky.SkyboxBk = imageThree
-            Sky.SkyboxDn = imageThree
-            Sky.SkyboxFt = imageThree
-            Sky.SkyboxLf = imageThree
-            Sky.SkyboxRt = imageThree
-            Sky.SkyboxUp = imageThree
-            task.wait(0.15)
-            Sky.SkyboxBk = imageFour
-            Sky.SkyboxDn = imageFour
-            Sky.SkyboxFt = imageFour
-            Sky.SkyboxLf = imageFour
-            Sky.SkyboxRt = imageFour
-            Sky.SkyboxUp = imageFour
-            task.wait(0.15)
-            Sky.SkyboxBk = imageFive
-            Sky.SkyboxDn = imageFive
-            Sky.SkyboxFt = imageFive
-            Sky.SkyboxLf = imageFive
-            Sky.SkyboxRt = imageFive
-            Sky.SkyboxUp = imageFive
-            task.wait(0.15)
-            Sky.SkyboxBk = imageSix
-            Sky.SkyboxDn = imageSix
-            Sky.SkyboxFt = imageSix
-            Sky.SkyboxLf = imageSix
-            Sky.SkyboxRt = imageSix
-            Sky.SkyboxUp = imageSix
-            task.wait(0.15)
-            Sky.SkyboxBk = imageSeven
-            Sky.SkyboxDn = imageSeven
-            Sky.SkyboxFt = imageSeven
-            Sky.SkyboxLf = imageSeven
-            Sky.SkyboxRt = imageSeven
-            Sky.SkyboxUp = imageSeven
-            task.wait(0.15)
-            Sky.SkyboxBk = imageEight
-            Sky.SkyboxDn = imageEight
-            Sky.SkyboxFt = imageEight
-            Sky.SkyboxLf = imageEight
-            Sky.SkyboxRt = imageEight
-            Sky.SkyboxUp = imageEight
-            task.wait(0.15)
-        end
-    end
+    while true do  
+        Sky.SkyboxBk = imageOne  
+        Sky.SkyboxDn = imageOne  
+        Sky.SkyboxFt = imageOne  
+        Sky.SkyboxLf = imageOne  
+        Sky.SkyboxRt = imageOne  
+        Sky.SkyboxUp = imageOne  
+        task.wait(0.15)  
+        Sky.SkyboxBk = imageTwo  
+        Sky.SkyboxDn = imageTwo  
+        Sky.SkyboxFt = imageTwo  
+        Sky.SkyboxLf = imageTwo  
+        Sky.SkyboxRt = imageTwo  
+        Sky.SkyboxUp = imageTwo  
+        task.wait(0.15)  
+        Sky.SkyboxBk = imageThree  
+        Sky.SkyboxDn = imageThree  
+        Sky.SkyboxFt = imageThree  
+        Sky.SkyboxLf = imageThree  
+        Sky.SkyboxRt = imageThree  
+        Sky.SkyboxUp = imageThree  
+        task.wait(0.15)  
+        Sky.SkyboxBk = imageFour  
+        Sky.SkyboxDn = imageFour  
+        Sky.SkyboxFt = imageFour  
+        Sky.SkyboxLf = imageFour  
+        Sky.SkyboxRt = imageFour  
+        Sky.SkyboxUp = imageFour  
+        task.wait(0.15)  
+        Sky.SkyboxBk = imageFive  
+        Sky.SkyboxDn = imageFive  
+        Sky.SkyboxFt = imageFive  
+        Sky.SkyboxLf = imageFive  
+        Sky.SkyboxRt = imageFive  
+        Sky.SkyboxUp = imageFive  
+        task.wait(0.15)  
+        Sky.SkyboxBk = imageSix  
+        Sky.SkyboxDn = imageSix  
+        Sky.SkyboxFt = imageSix  
+        Sky.SkyboxLf = imageSix  
+        Sky.SkyboxRt = imageSix  
+        Sky.SkyboxUp = imageSix  
+        task.wait(0.15)  
+        Sky.SkyboxBk = imageSeven  
+        Sky.SkyboxDn = imageSeven  
+        Sky.SkyboxFt = imageSeven  
+        Sky.SkyboxLf = imageSeven  
+        Sky.SkyboxRt = imageSeven  
+        Sky.SkyboxUp = imageSeven  
+        task.wait(0.15)  
+        Sky.SkyboxBk = imageEight  
+        Sky.SkyboxDn = imageEight  
+        Sky.SkyboxFt = imageEight  
+        Sky.SkyboxLf = imageEight  
+        Sky.SkyboxRt = imageEight  
+        Sky.SkyboxUp = imageEight  
+        task.wait(0.15)  
+    end  
+end
+
 })
 
-local Notification = loadstring(game:HttpGet("https://pastebin.com/raw/Ez5G36pt"))();
-local Notify = Notification.Notify;
-
-Notify({
-Description = "تم تطوير السكربت بشكل كامل شكرا علي الاستخدام";
-Title = "System STR";
-Duration = 5;
-
-});
