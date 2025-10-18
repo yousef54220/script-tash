@@ -4117,3 +4117,387 @@ sunRays.Spread = 0.8
 local blur = Instance.new("BlurEffect", Lighting)
 blur.Size = 0
 end})
+
+
+local FunTab = Window:MakeTab({ Title = "المتعة", Icon = "rbxassetid://110416050563182" })
+
+local Players = game:GetService("Players")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local Player = Players.LocalPlayer
+
+local RE = ReplicatedStorage:WaitForChild("RE")
+local ClearEvent = RE:FindFirstChild("1Clea1rTool1s")
+local ToolEvent = RE:FindFirstChild("1Too1l")
+local FireEvent = RE:FindFirstChild("1Gu1n")
+
+local attackEnabled = false
+
+local function clearAllTools()
+    if ClearEvent then
+        ClearEvent:FireServer("ClearAllTools")
+    end
+end
+
+local function getAssault()
+    if ToolEvent then
+        ToolEvent:InvokeServer("PickingTools", "Assault")
+    end
+end
+
+local function hasAssault()
+    return Player.Backpack:FindFirstChild("Assault") ~= nil
+end
+
+local function fireAtPart(targetPart)
+    local gunScript = Player.Backpack:FindFirstChild("Assault") and Player.Backpack.Assault:FindFirstChild("GunScript_Local")
+    if not gunScript or not targetPart then return end
+
+    local args = {
+        targetPart,
+        targetPart,
+        Vector3.new(1e14, 1e14, 1e14),
+        targetPart.Position,
+        gunScript:FindFirstChild("MuzzleEffect"),
+        gunScript:FindFirstChild("HitEffect"),
+        0,
+        0,
+        { false },
+        {
+            25,
+            Vector3.new(100, 100, 100),
+            BrickColor.new(29),
+            0.25,
+            Enum.Material.SmoothPlastic,
+            0.25
+        },
+        true,
+        false
+    }
+    FireEvent:FireServer(unpack(args))
+end
+
+local function startAssaultLoop()
+    task.spawn(function()
+        local chatService = game:GetService("TextChatService")
+        if chatService.ChatVersion == Enum.ChatVersion.TextChatService then
+            local channel = chatService.TextChannels:FindFirstChild("RBXGeneral")
+            if channel then
+                channel:SendAsync("Server: Hacked [🥶Y2 HUB🥶]")
+            end
+        else
+            print("تم التفعيل - TextChatService غير مفعل")
+        end
+        while attackEnabled do
+            clearAllTools()
+            getAssault()
+            repeat
+                task.wait(0.2)
+            until hasAssault() or not attackEnabled
+            for _, plr in ipairs(Players:GetPlayers()) do
+                if not attackEnabled then return end
+                if plr ~= Player and plr.Character and plr.Character:FindFirstChild("HumanoidRootPart") then
+                    for i = 1, 10000 do
+                        fireAtPart(plr.Character.HumanoidRootPart)
+                    end
+                end
+            end
+        end
+    end)
+end
+
+FunTab:AddToggle({
+    Name = "تجميد اللاعبين جديد ينيك الاعبين حرفيا",
+    Description = "يقوم بتوزيع 10000 طلقه علي كل لاعب لتجميده يعني ينيكه حرفيا",
+    Default = false,
+    Callback = function(state)
+        attackEnabled = state
+        if attackEnabled then
+            startAssaultLoop()
+        end
+    end
+})
+
+FunTab:AddSection({ "هالة ابواب" })
+
+FunTab:AddButton({
+    Name = "تشغيل هالة لابواب",
+    Description = "اشفط كل ابواب السيرفر",
+    Callback = function()
+        local Players = game:GetService("Players")
+        local RunService = game:GetService("RunService")
+        local LocalPlayer = Players.LocalPlayer
+        local Workspace = game:GetService("Workspace")
+
+        local angle = 1
+        local radius = 10
+        local blackHoleActive = false
+
+        local function setupPlayer()
+            local character = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
+            local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
+
+            local Folder = Instance.new("Folder", Workspace)
+            local Part = Instance.new("Part", Folder)
+            local Attachment1 = Instance.new("Attachment", Part)
+            Part.Anchored = true
+            Part.CanCollide = false
+            Part.Transparency = 1
+
+            return humanoidRootPart, Attachment1
+        end
+
+        local humanoidRootPart, Attachment1 = setupPlayer()
+
+        if not getgenv().Network then
+            getgenv().Network = {
+                BaseParts = {},
+                Velocity = Vector3.new(14.46262424, 14.46262424, 14.46262424)
+            }
+
+            Network.RetainPart = function(part)
+                if typeof(part) == "Instance" and part:IsA("BasePart") and part:IsDescendantOf(Workspace) then
+                    table.insert(Network.BaseParts, part)
+                    part.CustomPhysicalProperties = PhysicalProperties.new(0, 0, 0, 0, 0)
+                    part.CanCollide = false
+                end
+            end
+
+            local function EnablePartControl()
+                LocalPlayer.ReplicationFocus = Workspace
+                RunService.Heartbeat:Connect(function()
+                    sethiddenproperty(LocalPlayer, "SimulationRadius", math.huge)
+                    for _, part in pairs(Network.BaseParts) do
+                        if part:IsDescendantOf(Workspace) then
+                            part.Velocity = Network.Velocity
+                        end
+                    end
+                end)
+            end
+
+            EnablePartControl()
+        end
+
+        local function ForcePart(v)
+            if v:IsA("Part") and not v.Anchored and not v.Parent:FindFirstChild("Humanoid") and not v.Parent:FindFirstChild("Head") and v.Name ~= "Handle" then
+                for _, x in next, v:GetChildren() do
+                    if x:IsA("BodyAngularVelocity") or x:IsA("BodyForce") or x:IsA("BodyGyro") or x:IsA("BodyPosition") or x:IsA("BodyThrust") or x:IsA("BodyVelocity") or x:IsA("RocketPropulsion") then
+                        x:Destroy()
+                    end
+                end
+                if v:FindFirstChild("Attachment") then v:FindFirstChild("Attachment"):Destroy() end
+                if v:FindFirstChild("AlignPosition") then v:FindFirstChild("AlignPosition"):Destroy() end
+                if v:FindFirstChild("Torque") then v:FindFirstChild("Torque"):Destroy() end
+
+                v.CanCollide = false
+                local Torque = Instance.new("Torque", v)
+                Torque.Torque = Vector3.new(1000000, 1000000, 1000000)
+                local AlignPosition = Instance.new("AlignPosition", v)
+                local Attachment2 = Instance.new("Attachment", v)
+                Torque.Attachment0 = Attachment2
+                AlignPosition.MaxForce = math.huge
+                AlignPosition.MaxVelocity = math.huge
+                AlignPosition.Responsiveness = 500
+                AlignPosition.Attachment0 = Attachment2
+                AlignPosition.Attachment1 = Attachment1
+            end
+        end
+
+        local function toggleBlackHole()
+            blackHoleActive = not blackHoleActive
+            if blackHoleActive then
+                for _, v in next, Workspace:GetDescendants() do
+                    ForcePart(v)
+                end
+
+                Workspace.DescendantAdded:Connect(function(v)
+                    if blackHoleActive then
+                        ForcePart(v)
+                    end
+                end)
+
+                spawn(function()
+                    while blackHoleActive and RunService.RenderStepped:Wait() do
+                        angle = angle + math.rad(2)
+                        local offsetX = math.cos(angle) * radius
+                        local offsetZ = math.sin(angle) * radius
+                        Attachment1.WorldCFrame = humanoidRootPart.CFrame * CFrame.new(offsetX, 0, offsetZ)
+                    end
+                end)
+            else
+                Attachment1.WorldCFrame = CFrame.new(0, -1000, 0)
+            end
+        end
+
+        LocalPlayer.CharacterAdded:Connect(function()
+            humanoidRootPart, Attachment1 = setupPlayer()
+            if blackHoleActive then toggleBlackHole() end
+        end)
+
+        toggleBlackHole()
+    end
+})
+
+FunTab:AddSection({ "اختفاء حقيقي" })
+
+FunTab:AddButton({
+    Name = "سكن اختفاء",
+    Description = "غير سكنك لو بدك تطفيه",
+    Callback = function()
+        local args = {
+            [1] = {
+                [1] = 102344834840946,
+                [2] = 70400527171038,
+                [3] = 0,
+                [4] = 0,
+                [5] = 0,
+                [6] = 0
+            }
+        }
+
+        game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("ChangeCharacterBody"):InvokeServer(unpack(args))
+        game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("Wear"):InvokeServer(111858803548721)
+        local allaccessories = {}
+
+        for _, xcaefwefas in ipairs({
+            game.Players.LocalPlayer.Character.Humanoid.HumanoidDescription.BackAccessory,
+            game.Players.LocalPlayer.Character.Humanoid.HumanoidDescription.FaceAccessory,
+            game.Players.LocalPlayer.Character.Humanoid.HumanoidDescription.FrontAccessory,
+            game.Players.LocalPlayer.Character.Humanoid.HumanoidDescription.NeckAccessory,
+            game.Players.LocalPlayer.Character.Humanoid.HumanoidDescription.HatAccessory,
+            game.Players.LocalPlayer.Character.Humanoid.HumanoidDescription.HairAccessory,
+            game.Players.LocalPlayer.Character.Humanoid.HumanoidDescription.ShouldersAccessory,
+            game.Players.LocalPlayer.Character.Humanoid.HumanoidDescription.WaistAccessory,
+            game.Players.LocalPlayer.Character.Humanoid.HumanoidDescription.GraphicTShirt
+        }) do
+            for scacvdfbdb in string.gmatch(xcaefwefas, "%d+") do
+                table.insert(allaccessories, tonumber(scacvdfbdb))
+            end
+        end
+
+        wait()
+
+        for _, asderg in ipairs(allaccessories) do
+            task.spawn(function()
+                game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("Wear"):InvokeServer(asderg)
+            end)
+        end
+    end
+})
+
+FunTab:AddSection({ "تلوين الجسم" })
+
+local colors = { "Bright red", "Lime green", "Bright blue", "Bright yellow", "Bright cyan", "Hot pink", "Royal purple" }
+local rgbEnabled = false
+
+local function changeColor(color)
+    local args = { color }
+    game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("ChangeBodyColor"):FireServer(unpack(args))
+end
+
+local function toggleRGBCharacter(enabled)
+    rgbEnabled = enabled
+    if rgbEnabled then
+        while rgbEnabled do
+            for _, color in ipairs(colors) do
+                if not rgbEnabled then return end
+                changeColor(color)
+                wait(0.5)
+            end
+        end
+    end
+end
+
+FunTab:AddToggle({
+    Name = "تلوين الجسم",
+    Description = "لون جسمك بالوان حلوة",
+    Default = false,
+    Callback = function(value)
+        toggleRGBCharacter(value)
+    end
+})
+
+FunTab:AddSection({ "تلوين شعر" })
+local hairColors = {
+    Color3.new(1, 1, 0), Color3.new(0, 0, 1), Color3.new(1, 0, 1), Color3.new(1, 1, 1),
+    Color3.new(0, 1, 0), Color3.new(0.5, 0, 1), Color3.new(1, 0.647, 0), Color3.new(0, 1, 1)
+}
+local isActive = false
+
+local function changeHairColor()
+    local i = 1
+    while isActive do
+        if not isActive then break end
+        local args = { [1] = "ChangeHairColor2", [2] = hairColors[i] }
+        game:GetService("ReplicatedStorage"):WaitForChild("RE"):WaitForChild("1Max1y"):FireServer(unpack(args))
+        wait(0.1)
+        i = i % #hairColors + 1
+    end
+end
+
+FunTab:AddToggle({
+    Name = "لون شعرك",
+    Description = "تلوين شعر بالوان مختلفة",
+    Default = false,
+    Callback = function(value)
+        isActive = value
+        if isActive then
+            changeHairColor()
+        end
+    end
+})
+
+FunTab:AddSection({ "مضاد جلوس" })
+FunTab:AddToggle({
+    Name = "مضاد جلوس",
+    Description = "Prevents your character from sitting",
+    Default = false,
+    Callback = function(Value)
+        local player = game.Players.LocalPlayer
+        local connections = {}
+        local runService = game:GetService("RunService")
+        local function preventSitting(humanoid)
+            if humanoid then
+                humanoid:SetStateEnabled(Enum.HumanoidStateType.Seated, false)
+                local sitConnection = humanoid.StateChanged:Connect(function(_, newState)
+                    if newState == Enum.HumanoidStateType.Seated then
+                        humanoid:ChangeState(Enum.HumanoidStateType.GettingUp)
+                    end
+                end)
+                table.insert(connections, sitConnection)
+            end
+        end
+        local function monitorCharacter()
+            local function onCharacterAdded(character)
+                local humanoid = character:WaitForChild("Humanoid")
+                preventSitting(humanoid)
+            end
+            local characterAddedConnection = player.CharacterAdded:Connect(onCharacterAdded)
+            table.insert(connections, characterAddedConnection)
+            if player.Character then
+                onCharacterAdded(player.Character)
+            end
+        end
+        local function resetSitting()
+            for _, connection in ipairs(connections) do
+                connection:Disconnect()
+            end
+            connections = {}
+            local humanoid = player.Character and player.Character:FindFirstChildOfClass("Humanoid")
+            if humanoid then
+                humanoid:SetStateEnabled(Enum.HumanoidStateType.Seated, true)
+            end
+        end
+        if Value then
+            monitorCharacter()
+            local heartbeatConnection = runService.Heartbeat:Connect(function()
+                local humanoid = player.Character and player.Character:FindFirstChildOfClass("Humanoid")
+                if humanoid then
+                    humanoid:SetStateEnabled(Enum.HumanoidStateType.Seated, false)
+                end
+            end)
+            table.insert(connections, heartbeatConnection)
+        else
+            resetSitting()
+        end
+    end
+})
