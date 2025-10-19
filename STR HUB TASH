@@ -529,7 +529,7 @@ game.StarterGui:SetCore("SendNotification", {
     Title = "STR",
     Text = "تم تفعيل سكربت STR",
     Duration = 3,
-    Icon = "rbxassetid://97937665580776"
+    Icon = "rbxassetid://114769879906735"
 })
 
 -- إشعار ثاني
@@ -537,12 +537,12 @@ game.StarterGui:SetCore("SendNotification", {
     Title = "STR",
     Text = "استمتع!",
     Duration = 3,
-    Icon = "rbxassetid://97937665580776"
+    Icon = "rbxassetid://114769879906735"
 })
 
 local args = {
     "RolePlayName",
-    "سكربت المطور STR V1.1"
+    "سكربت المطور STR V1.2"
 }
 game:GetService("ReplicatedStorage"):WaitForChild("RE"):WaitForChild("1RPNam1eTex1t"):FireServer(unpack(args))
 
