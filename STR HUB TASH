@@ -575,18 +575,18 @@ SaveFolder = "STR_HUB"
 })
 
 Window:AddMinimizeButton({
-Button = {Image = "rbxassetid://97937665580776", BackgroundTransparency = 0},
+Button = {Image = "rbxassetid://114769879906735", BackgroundTransparency = 0},
 Corner = {CornerRadius = UDim.new(35, 1)}
 })
 
 
 
-Tab1 = Window:MakeTab({"الرئيسية","rbxassetid://97937665580776"})
+Tab1 = Window:MakeTab({"الرئيسية","rbxassetid://114769879906735"})
 
 Tab1:AddDiscordInvite({
     Name = "STR HUB | Community",
     Description = "انضم إلى مجتمعنا على ديسكورد لتكون جزءًا من التحديثات القادمة والمشاريع الجديدة",
-    Logo = "rbxassetid://97937665580776",
+    Logo = "rbxassetid://114769879906735",
     Invite = "https://discord.gg/FYx7GDWF"
 })
 
@@ -630,7 +630,7 @@ Tab1:AddButton({
 })
 
 -- ✅ تاب أوامر اللاعب
-local playerTab = Window:MakeTab({"اوامر الاعب", "rbxassetid://97937665580776"})
+local playerTab = Window:MakeTab({"اوامر الاعب", "rbxassetid://114769879906735"})
 
 local Players = game:GetService("Players")
 local Player = Players.LocalPlayer
@@ -724,7 +724,7 @@ end)
 
 
 
-Tab = Window:MakeTab({"السبامات و الازعاج","rbxassetid://97937665580776"})
+Tab = Window:MakeTab({"السبامات و الازعاج","rbxassetid://114769879906735"})
 
 local TextSave = ""
 local Speed = 0.5
@@ -930,7 +930,7 @@ end
 end
 })
 
-CarTab = Window:MakeTab({"السيارة","rbxassetid://97937665580776"})
+CarTab = Window:MakeTab({"السيارة","rbxassetid://114769879906735"})
 selectedSpeed = nil
 CarTab:AddTextBox({Name = "ادخل سرعة السيارة", PlaceholderText = "Input", Callback = function(Value)
 number = tonumber(Value)
@@ -981,7 +981,7 @@ game:GetService("ReplicatedStorage").RE["1Player1sCa1r"]:FireServer(btn.Command)
 end})
 end
 
-HouseTab = Window:MakeTab({"البيت","rbxassetid://97937665580776"})
+HouseTab = Window:MakeTab({"البيت","rbxassetid://114769879906735"})
 selectedHouse = nil
 HouseTab:AddTextBox({Name = "ادخل كود أغنية للبيت", PlaceholderText = "Input", Callback = function(Value)
 args = {"PickHouseMusicText", Value}
@@ -1009,7 +1009,7 @@ HouseTab:AddButton({Name="فتح/قفل الستائر", Callback=function()
 game:GetService("ReplicatedStorage").RE["1Player1sHous1e"]:FireServer("Curtains")
 end})
 
-TeleportTab = Window:MakeTab({"التنقلات","rbxassetid://97937665580776"})
+TeleportTab = Window:MakeTab({"التنقلات","rbxassetid://114769879906735"})
 TeleportLocations = {
 {Name="مكان النجمة {الترند}", CFrame=CFrame.new(-6, -133, 12)},
 {Name="النافورة بالبداية", CFrame=CFrame.new(-26, 19, 14)},
@@ -1048,7 +1048,7 @@ player.Character.HumanoidRootPart.CFrame = loc.CFrame
 end})
 end
 
-BangTab = Window:MakeTab({"بانق","rbxassetid://97937665580776"})
+BangTab = Window:MakeTab({"بانق","rbxassetid://114769879906735"})
 Players = game:GetService("Players")
 RunService = game:GetService("RunService")
 LocalPlayer = Players.LocalPlayer
@@ -1111,7 +1111,7 @@ createBangToggle("Bang v2 | خلفي v2", -1.5, false)
 createBangToggle("Face Bang v1 | أمامي v1", 1, true)
 createBangToggle("Face Bang v2 | أمامي v2", 1.5, true)
 
-Tab6 = Window:MakeTab({"السكربتات الجاهزة","rbxassetid://97937665580776"})
+Tab6 = Window:MakeTab({"السكربتات الجاهزة","rbxassetid://114769879906735"})
 function safeLoad(urlOrCode, isRawCode)
 ok, err = pcall(function()
 if isRawCode then loadstring(urlOrCode)()
@@ -1138,8 +1138,8 @@ Tab6:AddButton({Name = "سكربت ميكي", Callback = function() safeLoad("ht
 Tab6:AddButton({Name = "سكربت المطوره جيون", Callback = function() safeLoad("https://raw.githubusercontent.com/joygril/Brookhaven-RP-JG-Hub/refs/heads/main/Jeon-The-Best.txt") end})
 Tab6:AddButton({Name = "bring dors by ismail", Callback = function() safeLoad("https://raw.githubusercontent.com/sukuna355/testeismail333/refs/heads/main/Protected_8660142218887189.lua") end})
 Tab6:AddButton({Name = "Invisibility Script", Callback = function() safeLoad("https://pastebin.com/raw/3Rnd9rHf") end})
-Tab6:AddButton({Name = "Shadow Executor", Callback = function() safeLoad("https://raw.githubusercontent.com/youssefhesham542/Y2-Hub/main/Shadow%20Executor") end})
 Tab6:AddButton({Name = "Shadow Fly", Callback = function() safeLoad("https://raw.githubusercontent.com/youssefhesham542/Y2-Hub/main/Shadow%20Fly2") end})
+Tab6:AddButton({Name = "Y2 HUB by Shadow", Callback = function() safeLoad("https://raw.githubusercontent.com/Shadowisback54542/Shadow/main/Y2HUB") end})
 
 
 
@@ -1149,7 +1149,7 @@ local Target
 
 local TabSkins = Window:MakeTab({
     Title = "الاسكنات",
-    Icon  = "rbxassetid://97937665580776"
+    Icon  = "rbxassetid://114769879906735"
 })
 
 -- قسم نسخ السكنات
@@ -1325,7 +1325,7 @@ TabSkins:AddButton({
 -- 📌 إنشاء تاب المضادات
 local TabAnti = Window:MakeTab({
     Title = "المضادات",
-    Icon  = "rbxassetid://97937665580776"
+    Icon  = "rbxassetid://114769879906735"
 })
 
 -- 🛡️ المضادات
@@ -1576,7 +1576,7 @@ TabAnti:AddToggle({
 
 local Tab = Window:MakeTab({
     Title = "جيم باسات",
-    Icon  = "rbxassetid://97937665580776"
+    Icon  = "rbxassetid://114769879906735"
 })
 
 Tab:AddButton({
@@ -1605,7 +1605,7 @@ Tab:AddButton({
             Title = "أشـعار !",
             Text = "صـار عنـدك كـل گـيم باسـات الـماب √",
             Duration = 3,
-            Icon = "rbxassetid://97937665580776"
+            Icon = "rbxassetid://114769879906735"
         })
     end
 })
@@ -1622,7 +1622,7 @@ Tab:AddButton({
             Title = "أشـعار !",
             Text = "تـم صـار عنـدك",
             Duration = 3,
-            Icon = "rbxassetid://97937665580776"
+            Icon = "rbxassetid://114769879906735"
         })
         game:GetService("Players").LocalPlayer.PlayersBag.SilverPass.Value = true
     end
@@ -1640,7 +1640,7 @@ Tab:AddButton({
             Title = "أشـعار !",
             Text = "تـم صـار عنـدك",
             Duration = 3,
-            Icon = "rbxassetid://97937665580776"
+            Icon = "rbxassetid://114769879906735"
         })
         game:GetService("Players").LocalPlayer.PlayersBag.VIP.Value = true
     end
@@ -1658,7 +1658,7 @@ Tab:AddButton({
             Title = "أشـعار !",
             Text = "تـم صـار عنـدك",
             Duration = 3,
-            Icon = "rbxassetid://97937665580776"
+            Icon = "rbxassetid://114769879906735"
         })
         game:GetService("Players").LocalPlayer.PlayersBag.MusicPass.Value = true
     end
@@ -1676,15 +1676,15 @@ Tab:AddButton({
             Title = "أشـعار !",
             Text = "تـم صـار عنـدك",
             Duration = 3,
-            Icon = "rbxassetid://97937665580776"
+            Icon = "rbxassetid://114769879906735"
         })
         game:GetService("Players").LocalPlayer.PlayersBag.SpeedPass200.Value = true
     end
 })
 
 
--- ✅ تاب الأسماء مع الأيقونة اللي انت اخترتها
-local nameTab = Window:MakeTab({"اسماء", "rbxassetid://97937665580776"})
+--  تاب الأسماء مع الأيقونة اللي انت اخترتها
+local nameTab = Window:MakeTab({"اسماء", "rbxassetid://114769879906735"})
 local selectedColor = Color3.new(1, 1, 1)
 
 local colorOptions = {
@@ -1769,12 +1769,12 @@ for _,name in ipairs(arabicNames) do
         Callback = function()
             local args = {"RolePlayName", name}
             game:GetService("ReplicatedStorage"):WaitForChild("RE"):WaitForChild("1RPNam1eTex1t"):FireServer(unpack(args))
-            print("تم تغيير الاسم إلى: "..name.." ✅")
+            print("تم تغيير الاسم إلى: "..name.." 🙂")
         end
     })
 end
 
-local ToolTab = Window:MakeTab({"ادوات/Tool","rbxassetid://97937665580776"})
+local ToolTab = Window:MakeTab({"ادوات/Tool","rbxassetid://114769879906735"})
 
 ToolTab:AddButton({
 Name = "كـرسـتـال / 1",
@@ -1927,7 +1927,7 @@ game:GetService("ReplicatedStorage").RE:FindFirstChild("1Too1l"):InvokeServer(un
 
 
 
-local notifyTab = Window:MakeTab({"الإشعارات", "rbxassetid://97937665580776"})
+local notifyTab = Window:MakeTab({"الإشعارات", "rbxassetid://114769879906735"})
 
 local notifyEnabled = false
 
@@ -1947,7 +1947,7 @@ game.StarterGui:SetCore("SendNotification", {
 Title = title,
 Text = text,
 Duration = 3,
-Icon = "rbxassetid://97937665580776"
+Icon = "rbxassetid://114769879906735"
 })
 end
 
@@ -1964,7 +1964,7 @@ end
 end)
 
 
-local Main = Window:MakeTab({"اغاني المجانية", "rbxassetid://97937665580776"})
+local Main = Window:MakeTab({"اغاني المجانية", "rbxassetid://114769879906735"})
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Players = game:GetService("Players")
 local Workspace = game:GetService("Workspace")
@@ -2026,6 +2026,7 @@ local audios = {
     {Name = "حبيبي يا رسول الله 1", ID = 131597210164474},
     {Name = "اغنيه 4", ID = 91545096088459},
     {Name = "فانق بافو دو بافو", ID = 106317184644394},
+    {Name = "جراني", ID = 115163639351877},
 }
 
 local audioNames = {}
@@ -2138,7 +2139,7 @@ Main:AddToggle({
 })
 
 
-local yuratab = Window:MakeTab({ Title = "سيارات vip", Icon = "rbxassetid://97937665580776" })
+local yuratab = Window:MakeTab({ Title = "سيارات vip", Icon = "rbxassetid://114769879906735" })
 
 yuratab:AddSection({ "اختر سياره" })
 
@@ -2191,7 +2192,7 @@ yuratab:AddButton({
 })
 
 
-local Troll = Window:MakeTab({ Title = "تخريب على لاعبين", Icon = "rbxassetid://97937665580776" })
+local Troll = Window:MakeTab({ Title = "تخريب على لاعبين", Icon = "rbxassetid://114769879906735" })
 
 
 local Players = game:GetService("Players")
@@ -3724,7 +3725,7 @@ Troll:AddButton({
     end
 })
 
-local shadersTab = Window:MakeTab({ Title = "شادرات", Icon = "rbxassetid://97937665580776" })
+local shadersTab = Window:MakeTab({ Title = "شادرات", Icon = "rbxassetid://114769879906735" })
 
 shadersTab:AddSection({ "شادر" })
 shadersTab:AddParagraph({"اذا تريد تشيله اطلع و ادخل"})
@@ -4112,7 +4113,7 @@ blur.Size = 0
 end})
 
 
-local FunTab = Window:MakeTab({ Title = "المتعة", Icon = "rbxassetid://97937665580776" })
+local FunTab = Window:MakeTab({ Title = "المتعة", Icon = "rbxassetid://114769879906735" })
 
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
@@ -4498,7 +4499,7 @@ FunTab:AddToggle({
 
 local Tab20 = Window:MakeTab({
 Title = " تخريب السماء (تحت التطوير) ",
-Icon = "rbxassetid://97937665580776"
+Icon = "rbxassetid://114769879906735"
 })
 
 Tab20:AddButton({
