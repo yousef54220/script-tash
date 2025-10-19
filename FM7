@@ -597,7 +597,7 @@ return {
 -- This Admin Wath made by Shadow
 -- Shadow Is Back
 
-local Libary = loadstring(game:HttpGet("https://raw.githubusercontent.com/wx-sources/Redzmagnusv5/refs/heads/main/RedzV5.Lua.txt"))()
+local Libary = loadstring(game:HttpGet("https://raw.githubusercontent.com/realgengar/Library/refs/heads/main/remake.lua"))()
 workspace.FallenPartsDestroyHeight = -math.huge
 
 local Window = Libary:MakeWindow({
