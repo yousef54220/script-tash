@@ -4601,6 +4601,15 @@ Duration = 5;
 
 });
 
--- كس خالت الي بيسرب هاد السكريت بالمستقبل 
+local Notification = loadstring(game:HttpGet("https://pastebin.com/raw/h4SKdhuK"))()
+local Notify = Notification.Notify
+
+Notify({
+    Title = "System STR",
+    Description = "هل ندمت علي استخدام سكربتنا؟",
+    Duration = 5
+})
+
+-- كس خالت الي بيسرب هاد السكربت بالمستقبل 
 -- انيك عرضك
 -- by Shadow and Mohammed 
