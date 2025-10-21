@@ -4591,6 +4591,105 @@ end
 
 })
 
+local bombTab = Window:MakeTab({
+Title = "القنابل",
+Icon = "rbxassetid://114769879906735"
+})
+
+bombTab:AddSection({
+Name = " اسبام قنابل ما يعطي بان علي ضمانتي و يضهر عند الكل"
+})
+
+bombTab:AddButton({
+Name = "اسبام قنابل",
+Description = "في الاخر اضغط علي المكان الي تريد يتفجر فيه القنابل",
+Callback = function()
+local LAG_DURATION = 5
+local Player = game.Players.LocalPlayer
+local Character = Player.Character or Player.CharacterAdded:Wait()
+local RootPart = Character:WaitForChild("HumanoidRootPart")
+local Backpack = Player:WaitForChild("Backpack")
+local WorkspaceService = game:GetService("Workspace")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local VirtualInputManager = game:GetService("VirtualInputManager")
+
+local BombPlaceObject = nil   
+    local DetonateRE = ReplicatedStorage:WaitForChild("RE"):WaitForChild("1Blo1wBomb1sServe1r")  
+    local Bomb = WorkspaceService:WaitForChild("WorkspaceCom"):WaitForChild("001_CriminalWeapons"):WaitForChild("GiveTools"):WaitForChild("Bomb")  
+
+    if not Bomb or not RootPart then  
+        return  
+    end  
+
+    local originalPosition = RootPart.CFrame  
+    local BombActive = true  
+
+    local lagTask1 = task.spawn(function()  
+        while BombActive do  
+            RootPart.CFrame = Bomb.CFrame  
+            fireclickdetector(Bomb.ClickDetector)  
+            task.wait(0.00001)  
+        end  
+    end)  
+
+    local lagTask2 = task.spawn(function()  
+        while BombActive do  
+            VirtualInputManager:SendMouseButtonEvent(500, 500, 0, true, game, 0)   
+            task.wait(1.5)  
+            VirtualInputManager:SendMouseButtonEvent(500, 500, 0, false, game, 0)   
+            local detonateArgs = {  
+                [1] = "Bomb" .. Player.Name  
+            }  
+            DetonateRE:FireServer(unpack(detonateArgs))  
+            task.wait(1.5)  
+        end  
+    end)  
+
+    task.wait(LAG_DURATION)  
+    BombActive = false  
+    task.cancel(lagTask1)  
+    task.cancel(lagTask2)  
+    RootPart.CFrame = originalPosition  
+
+    if BombPlaceObject and BombPlaceObject:FindFirstChild("AttemptPlaceProp") and BombPlaceObject.AttemptPlaceProp:IsA("RemoteEvent") then  
+        local PlacePropRE = BombPlaceObject:WaitForChild("AttemptPlaceProp")  
+        local playerCurrentPosition = RootPart.Position  
+        local targetProp = workspace:WaitForChild("Model"):WaitForChild("Street"):WaitForChild("Street")  
+        local placementArgs = {  
+            playerCurrentPosition,  
+            targetProp  
+        }  
+        PlacePropRE:FireServer(unpack(placementArgs))  
+    end  
+
+    local function GetBombCount()  
+        local count = 0  
+        for _, item in ipairs(Backpack:GetChildren()) do  
+            if item.Name == "Bomb" then  
+                count = count + 1  
+            end  
+        end  
+        for _, item in ipairs(Character:GetChildren()) do  
+            if item.Name == "Bomb" and item:IsA("Tool") then  
+                count = count + 1  
+            end  
+        end  
+        return count  
+    end  
+
+    local detonateIdentifier = "Bomb" .. Player.Name  
+    local finalDetonateArgs = {  
+        [1] = detonateIdentifier  
+    }  
+
+    while GetBombCount() > 0 do  
+        DetonateRE:FireServer(unpack(finalDetonateArgs))  
+        task.wait()   
+    end  
+end
+
+})
+
 local Notification = loadstring(game:HttpGet("https://pastebin.com/raw/Ez5G36pt"))();
 local Notify = Notification.Notify;
 
