@@ -1071,9 +1071,7 @@ end
 	function Window:CloseBtn()
 		local Dialog = Window:Dialog({
 			Title = "Close",
-			Text = "هل ترغب حقًا في إغلاق  STR HUB؟
-إنه يحتوي على ميزات أساسية، وإغلاقه الآن قد يؤدي إلى توقف بعض الوظائف المهمة، أو حدوث أخطاء، أو فقدان إعداداتك.
-يرجى الحذر قبل المتابعة.",
+			Text = "do you wan,t to close str hub? ",
 			Options = {
 				{"Confirm", function()
 					ScreenGui:Destroy()
