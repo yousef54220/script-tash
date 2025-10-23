@@ -1070,7 +1070,7 @@ end
 	local Window, FirstTab = {}, false
 	function Window:CloseBtn()
 		local Dialog = Window:Dialog({
-			Title = "Close",
+			Title = "Close Str ",
 			Text = "do you want to close str hub? ",
 			Options = {
 				{"Confirm", function()
