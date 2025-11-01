@@ -339,13 +339,13 @@ local LoadingConfig = {
 }
 
 local LoadingElements = {
-    "انا الافضل (STR HUB)",
-    "نورت سكربتنا ياعسل...",
+    "انا الافضل (Y2 HUB)",
+    "نورت سكربتي ياعسل...",
     "جاري تحميل بعض التابات... ",
     "جاري تحميل الواجهه... ",
-    "سكربت المطور STR",
-    "شكرا للاختيارك السكربت يا عسل... ",
-    "STR عمك",
+    "سكربت المطور STR Shadow عم",
+    "شكرآ جزيلا علي اختيارك...", 
+    "STR HUB Love You",
     "جاري تحميل المميزات...",
     "تم تحميل السكربت بنجاح... "
 }
@@ -843,7 +843,7 @@ percentTween:Play()
 end
 
 StartLoadingSequence()
-    
+
 -- إشعار أول
 game.StarterGui:SetCore("SendNotification", {
     Title = "STR",
