@@ -4495,8 +4495,10 @@ FunTab:AddToggle({
     end
 })
 
-local Tab20 = Window:MakeTab({Name = "تخريب السماء (تم اضافه اشياء تضهر للكل) ", Icon = "rbxassetid://6031071050"})
-
+local Tab20 = Window:MakeTab({
+    "تخريب السماء (تم اضافه اشياء تضهر للكل)",
+    "rbxassetid://114769879906735"
+})
 Tab20:AddButton({
 Name = "تخريب سماء Skiliton نادر",
 Callback = function()
