@@ -5027,6 +5027,13 @@ local Window = WindUI:CreateWindow({
     Resizable = true,
 })
 
+local sound = Instance.new("Sound")
+sound.SoundId = "rbxassetid://8486683243"
+sound.Volume = 0.5
+sound.PlayOnRemove = true
+sound.Parent = Workspace
+sound:Destroy()
+
 Window:Tag({
     Title = "v" .. WindUI.Version,
     Icon = "shield",
