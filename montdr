@@ -1810,3 +1810,10 @@ end
   end
   return Menu
 end
+
+game.StarterGui:SetCore("SendNotification", {
+Title = "Shadow",
+Text = "GUI BY SHADOWDEV",
+Duration = 3,
+Icon = "rbxassetid://110416050563182"
+})
