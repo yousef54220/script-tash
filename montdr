@@ -1,11 +1,11 @@
-local Configs_HUB = {
-  Cor_Hub = Color3.fromRGB(15, 15, 15),
-  Cor_Options = Color3.fromRGB(15, 15, 15),
-  Cor_Stroke = Color3.fromRGB(5, 5, 255), -- عدّلنا الأحمر إلى الأزرق
-  Cor_Text = Color3.fromRGB(240, 240, 240),
-  Cor_DarkText = Color3.fromRGB(240, 240, 240),
-  Corner_Radius = UDim.new(0,4),
-  Text_Font = Enum.Font.FredokaOne
+local Configs_HUB = { 
+  Cor_Hub = Color3.fromRGB(0, 0, 100), 
+  Cor_Options = Color3.fromRGB(0, 0, 100), 
+  Cor_Stroke = Color3.fromRGB(0, 0, 100), 
+  Cor_Text = Color3.fromRGB(240, 240, 240), 
+  Cor_DarkText = Color3.fromRGB(240, 240, 240), 
+  Corner_Radius = UDim.new(0, 15), 
+  Text_Font = Enum.Font.FredokaOne 
 }
 
 local CoreGui = game:GetService("CoreGui")
@@ -1786,7 +1786,7 @@ end
         JoinButton.BackgroundColor3 = Color3.fromRGB(100, 100, 100)
         JoinButton.TextColor3 = Color3.fromRGB(150, 150, 150)
         task.wait(5)
-        JoinButton.Text = "Join"
+        JoinButton.Text = "انضم"
         JoinButton.BackgroundColor3 = Color3.fromRGB(50, 200, 50)
         JoinButton.TextColor3 = Color3.fromRGB(220, 220, 220)
       end
