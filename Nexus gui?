@@ -1602,7 +1602,7 @@ function redzlib:MakeWindow(Configs)
 	function Window:CloseBtn()
 		local Dialog = Window:Dialog({
 			Title = "إغلاق",
-			Text = "هل فعلاً تريد غلق الواجهه؟",
+			Text = "هل حقا تريد غلق سكربت NEXUS?  ",
 			Options = {
 				{"نعم", function()
 					ScreenGui:Destroy()
@@ -2626,7 +2626,7 @@ function redzlib:MakeWindow(Configs)
 	local Invite = Configs[3] or Configs.Invite or ""
 	
 	local InviteHolder = Create("Frame", Container, {
-		Size = UDim2.new(1, 0, 0, 85),
+		Size = UDim2.new(1, 0, 0, 80),
 		Name = "Option",
 		BackgroundTransparency = 1
 	})
@@ -2634,7 +2634,7 @@ function redzlib:MakeWindow(Configs)
 	local InviteLabel = Create("TextLabel", InviteHolder, {
 		Size = UDim2.new(1, 0, 0, 15),
 		Position = UDim2.new(0, 5),
-		TextColor3 = Color3.fromRGB(180, 100, 255),
+		TextColor3 = Color3.fromRGB(170, 0, 255),
 		Font = Enum.Font.GothamBold,
 		TextXAlignment = "Left",
 		BackgroundTransparency = 1,
@@ -2643,17 +2643,11 @@ function redzlib:MakeWindow(Configs)
 	})
 	
 	local FrameHolder = InsertTheme(Create("Frame", InviteHolder, {
-		Size = UDim2.new(1, 0, 0, 68),
+		Size = UDim2.new(1, 0, 0, 65),
 		AnchorPoint = Vector2.new(0, 1),
 		Position = UDim2.new(0, 0, 1),
-		BackgroundColor3 = Color3.fromRGB(35, 0, 60)
+		BackgroundColor3 = Color3.fromRGB(90, 0, 150)
 	}), "Frame")Make("Corner", FrameHolder)
-	
-	local Glow = Create("UIStroke", FrameHolder, {
-		Color = Color3.fromRGB(160, 90, 255),
-		Thickness = 1.5,
-		ApplyStrokeMode = Enum.ApplyStrokeMode.Border
-	})
 	
 	local ImageLabel = Create("ImageLabel", FrameHolder, {
 		Size = UDim2.new(0, 30, 0, 30),
@@ -2666,7 +2660,7 @@ function redzlib:MakeWindow(Configs)
 		Size = UDim2.new(1, -52, 0, 15),
 		Position = UDim2.new(0, 44, 0, 7),
 		Font = Enum.Font.GothamBold,
-		TextColor3 = Color3.fromRGB(200, 140, 255),
+		TextColor3 = Color3.fromRGB(200, 100, 255),
 		TextXAlignment = "Left",
 		BackgroundTransparency = 1,
 		TextSize = 10,
@@ -2679,7 +2673,7 @@ function redzlib:MakeWindow(Configs)
 		TextWrapped = "Y",
 		AutomaticSize = "Y",
 		Font = Enum.Font.Gotham,
-		TextColor3 = Color3.fromRGB(170, 100, 255),
+		TextColor3 = Color3.fromRGB(180, 80, 255),
 		TextXAlignment = "Left",
 		BackgroundTransparency = 1,
 		TextSize = 8,
@@ -2687,48 +2681,32 @@ function redzlib:MakeWindow(Configs)
 	}), "DarkText")
 	
 	local JoinButton = Create("TextButton", FrameHolder, {
-		Size = UDim2.new(1, -14, 0, 17),
+		Size = UDim2.new(1, -14, 0, 16),
 		AnchorPoint = Vector2.new(0.5, 1),
 		Position = UDim2.new(0.5, 0, 1, -7),
 		Text = "Join",
 		Font = Enum.Font.GothamBold,
 		TextSize = 12,
-		TextColor3 = Color3.fromRGB(255, 230, 255),
-		BackgroundColor3 = Color3.fromRGB(90, 0, 150)
+		TextColor3 = Color3.fromRGB(230, 180, 255),
+		BackgroundColor3 = Color3.fromRGB(140, 0, 255)
 	})Make("Corner", JoinButton, UDim.new(0, 5))
 	
-	local Stroke = Create("UIStroke", JoinButton, {
-		Color = Color3.fromRGB(200, 100, 255),
-		Thickness = 1.3
-	})
-	
-	local UIGradient = Instance.new("UIGradient", JoinButton)
-	UIGradient.Color = ColorSequence.new{
-		ColorSequenceKeypoint.new(0, Color3.fromRGB(150, 0, 255)),
-		ColorSequenceKeypoint.new(1, Color3.fromRGB(90, 0, 180))
-	}
-	UIGradient.Rotation = 90
-	
-	local TweenService = game:GetService("TweenService")
 	local ClickDelay
-	
-	JoinButton.MouseEnter:Connect(function()
-		TweenService:Create(JoinButton, TweenInfo.new(0.3), {BackgroundColor3 = Color3.fromRGB(120, 20, 220)}):Play()
-	end)
-	JoinButton.MouseLeave:Connect(function()
-		TweenService:Create(JoinButton, TweenInfo.new(0.3), {BackgroundColor3 = Color3.fromRGB(90, 0, 150)}):Play()
-	end)
-	
 	JoinButton.Activated:Connect(function()
 		setclipboard(Invite)
 		if ClickDelay then return end
+		
 		ClickDelay = true
-		TweenService:Create(JoinButton, TweenInfo.new(0.3), {BackgroundColor3 = Color3.fromRGB(60, 0, 100)}):Play()
-		JoinButton.Text = "Copied to Clipboard"
-		task.wait(5)
-		JoinButton.Text = "Join"
-		TweenService:Create(JoinButton, TweenInfo.new(0.3), {BackgroundColor3 = Color3.fromRGB(90, 0, 150)}):Play()
-		ClickDelay = false
+		SetProps(JoinButton, {
+			Text = "Copied to Clipboard",
+			BackgroundColor3 = Color3.fromRGB(100, 0, 180),
+			TextColor3 = Color3.fromRGB(200, 130, 255)
+		})task.wait(5)
+		SetProps(JoinButton, {
+			Text = "Join",
+			BackgroundColor3 = Color3.fromRGB(140, 0, 255),
+			TextColor3 = Color3.fromRGB(230, 180, 255)
+		})ClickDelay = false
 	end)
 	
 	local DiscordInvite = {}
@@ -2737,7 +2715,8 @@ function redzlib:MakeWindow(Configs)
 	return DiscordInvite
 end
 return Tab
-	
+
+end	
 	CloseButton.Activated:Connect(Window.CloseBtn)
 	MinimizeButton.Activated:Connect(Window.MinimizeBtn)
 	return Window
