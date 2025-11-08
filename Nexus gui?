@@ -1101,7 +1101,7 @@ local ScreenGui = Create("ScreenGui", CoreGui, {
 	})
 })
 local ClickSound = Instance.new("Sound", ScreenGui)
-ClickSound.SoundId = "rbxassetid://3359534883"
+ClickSound.SoundId = "rbxassetid://1412830636"
 ClickSound.Volume = 0.5
 
 local function PlaySound()
