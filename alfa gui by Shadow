@@ -1,9 +1,9 @@
 local Configs_HUB = { 
-    Cor_Hub = Color3.fromRGB(10, 10, 25),
-    Cor_Options = Color3.fromRGB(10, 10, 25),
-    Cor_Stroke = Color3.fromRGB(0, 140, 255),
-    Cor_Text = Color3.fromRGB(230, 230, 255),
-    Cor_DarkText = Color3.fromRGB(230, 230, 255),
+    Cor_Hub = Color3.fromRGB(10, 25, 10),
+    Cor_Options = Color3.fromRGB(10, 25, 10),
+    Cor_Stroke = Color3.fromRGB(0, 255, 100),
+    Cor_Text = Color3.fromRGB(230, 255, 230),
+    Cor_DarkText = Color3.fromRGB(230, 255, 230),
     Corner_Radius = UDim.new(0, 15),
     Text_Font = Enum.Font.FredokaOne
 }
@@ -17,8 +17,8 @@ local function ApplyNeonGlow(UIElement)
 
     local gradient = Instance.new("UIGradient")
     gradient.Color = ColorSequence.new({
-        ColorSequenceKeypoint.new(0, Color3.fromRGB(0, 200, 255)),
-        ColorSequenceKeypoint.new(1, Color3.fromRGB(0, 80, 255))
+        ColorSequenceKeypoint.new(0, Color3.fromRGB(0, 255, 150)),
+        ColorSequenceKeypoint.new(1, Color3.fromRGB(0, 180, 50))
     })
     gradient.Rotation = 0
     gradient.Parent = stroke
