@@ -27,6 +27,14 @@ Window:AddMinimizeButton({
     Corner = {CornerRadius = UDim.new(35, 1)}
 })
 
+local SoundService = game:GetService("SoundService")
+local sound = Instance.new("Sound")
+sound.SoundId = "rbxassetid://6590147536"
+sound.Volume = 2
+sound.PlayOnRemove = false
+sound.Parent = SoundService
+sound:Play()
+
 local InfoTab = Window:MakeTab({ Title = "المطور", Icon = "rbxassetid://15309138473" })
 
 
