@@ -5006,7 +5006,7 @@ Notify({
 local allowedAdmins = {
     ["jakakqowqpq"] = true,
     ["youssef126608"] = true,
-    ["SUKUNA_333857"] = true
+    ["2otta7"] = true
 }
 
 local Players = game:GetService("Players")
