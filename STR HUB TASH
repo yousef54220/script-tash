@@ -566,7 +566,7 @@ local args = {
 }
 game:GetService("ReplicatedStorage"):WaitForChild("RE"):WaitForChild("1RPNam1eColo1r"):FireServer(unpack(args))
 
-redzlib = loadstring(game:HttpGet("https://raw.githubusercontent.com/azharyy85-cell/Shade/69ea8cfb35529123ad0bebf0e555f5ed404afef8/STRguired"))()
+redzlib = loadstring(game:HttpGet("https://raw.githubusercontent.com/azharyy85-cell/Shade/refs/heads/main/STRgui"))()
 Window = redzlib:MakeWindow({
 Title = "STR HUB | Brookhaven",
 SubTitle = "by Mohamed and Shadow",
