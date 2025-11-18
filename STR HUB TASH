@@ -541,7 +541,7 @@ game.StarterGui:SetCore("SendNotification", {
 
 local args = {
     "RolePlayName",
-    "سكربت المطور STR V1.2"
+    "سكربت المطور STR V1.3"
 }
 game:GetService("ReplicatedStorage"):WaitForChild("RE"):WaitForChild("1RPNam1eTex1t"):FireServer(unpack(args))
 
@@ -566,7 +566,7 @@ local args = {
 }
 game:GetService("ReplicatedStorage"):WaitForChild("RE"):WaitForChild("1RPNam1eColo1r"):FireServer(unpack(args))
 
-redzlib = loadstring(game:HttpGet("https://raw.githubusercontent.com/azharyy85-cell/Shade/refs/heads/main/newrab"))()
+redzlib = loadstring(game:HttpGet("https://raw.githubusercontent.com/azharyy85-cell/Shade/69ea8cfb35529123ad0bebf0e555f5ed404afef8/STRguired"))()
 Window = redzlib:MakeWindow({
 Title = "STR HUB | Brookhaven",
 SubTitle = "by Mohamed and Shadow",
