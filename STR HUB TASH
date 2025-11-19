@@ -578,7 +578,24 @@ Button = {Image = "rbxassetid://114769879906735", BackgroundTransparency = 0},
 Corner = {CornerRadius = UDim.new(35, 1)}
 })
 
-
+task.defer(function()
+    Window:Dialog({
+        Title = "💣بووووووووووومم💣", 
+        Text = "💣تم اضافه اشياء قويه جدا و شكرا لكم علي الاستخدام نتمنا ان يعجبكم السكربت جدا💣 ",
+        Options = {
+            {"قفل", function()  
+                if MainFrame:FindFirstChild("Dialog") then
+                    MainFrame.Dialog:Destroy()
+                end
+            end},
+            {"لاحقاً", function()
+                if MainFrame:FindFirstChild("Dialog") then
+                    MainFrame.Dialog:Destroy()
+                end
+            end}
+        }
+    })
+end)
 
 Tab1 = Window:MakeTab({"الرئيسية","rbxassetid://114769879906735"})
 
