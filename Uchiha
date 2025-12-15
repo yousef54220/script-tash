@@ -1,0 +1,27 @@
+local redzlib = loadstring(game:HttpGet("https://raw.githubusercontent.com/azharyy85-cell/Shade/refs/heads/main/nexusguiyellow"))()
+local Window = redzlib:MakeWindow({
+  Title = "Uchiha | BROOKHAVEN",
+  SubTitle = "by saif",
+  SaveFolder = "test"
+})
+Window:AddMinimizeButton({
+    Button = { Image = "rbxassetid://85545622294922", BackgroundTransparency = 0 },
+    Corner = { CornerRadius = UDim.new(0.6, 1) },
+})
+local InfoTab = Window:MakeTab({ Title = "المطور", Icon = "rbxassetid://15309138473" })
+
+
+
+InfoTab:AddSection({ "Script Information" })
+InfoTab:AddParagraph({ "by saif and Shadow" })
+InfoTab:AddParagraph({ "gui: redz" })
+InfoTab:AddParagraph({ "You are using:", "Uchiha  hub v1.1" })
+
+InfoTab:AddSection({ "اعادة الدخول" })
+InfoTab:AddButton({
+    Name = "اعادة لانضمام لنفس السيرفر",
+    Callback = function()
+        local TeleportService = game:GetService("TeleportService")
+        TeleportService:TeleportToPlaceInstance(game.PlaceId, game.JobId, game.Players.LocalPlayer)
+    end
+})
