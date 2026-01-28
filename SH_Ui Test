@@ -1,0 +1,683 @@
+local UserInputService = game:GetService("UserInputService")
+local TweenService = game:GetService("TweenService")
+local CoreGui = game:GetService("CoreGui")
+local RunService = game:GetService("RunService")
+local HttpService = game:GetService("HttpService")
+local Players = game:GetService("Players")
+local MarketplaceService = game:GetService("MarketplaceService")
+local StarterGui = game:GetService("StarterGui")
+local GuiService = game:GetService("GuiService")
+local LocalPlayer = Players.LocalPlayer
+local Camera = workspace.CurrentCamera
+local ViewportSize = Camera and Camera.ViewportSize or Vector2.new(1280,720)
+local UIScale = ViewportSize.Y / 450
+local function safeDecode(s) local ok,v = pcall(function() return HttpService:JSONDecode(s) end) if ok then return v end return nil end
+local function safeEncode(t) local ok,v = pcall(function() return HttpService:JSONEncode(t) end) if ok then return v end return "{}" end
+local success, iconsRaw = pcall(function() return game:HttpGet("https://raw.githubusercontent.com/yousef54220/Shade/refs/heads/main/SH%20ICONS") end)
+local Icons = (success and safeDecode(iconsRaw)) or {["mousepointerclick"] = "rbxassetid://10709810814", ["chevrondown"] = "rbxassetid://10709790948", ["x"] = "rbxassetid://10747384394", ["search"] = "rbxassetid://10734943674"}
+local SH_lib = {Version = "1.0.0", Themes = {}, Icons = Icons, Settings = {}, Flags = {}, Instances = {}, Windows = {}, Profiles = {}, Events = {}, _notifQueue = {}, _notifRunning = false}
+local mt = {__index = SH_lib}
+SH_lib.Themes.Dark = {["Color Hub 1"] = ColorSequence.new({ColorSequenceKeypoint.new(0, Color3.fromRGB(120,0,255)), ColorSequenceKeypoint.new(1, Color3.fromRGB(90,0,220))}), ["Color Hub 2"] = Color3.fromRGB(120,0,255), ["Color Stroke"] = Color3.fromRGB(160,100,255), ["Color Theme"] = Color3.fromRGB(10,10,10), ["Color Text"] = Color3.fromRGB(255,255,255), ["Color Dark Text"] = Color3.fromRGB(190,160,255), ["Transparency"] = 0.18}
+SH_lib.Themes.Darker = {["Color Hub 1"] = ColorSequence.new({ColorSequenceKeypoint.new(0, Color3.fromRGB(110,0,245)), ColorSequenceKeypoint.new(1, Color3.fromRGB(60,0,150))}), ["Color Hub 2"] = Color3.fromRGB(110,0,245), ["Color Stroke"] = Color3.fromRGB(150,90,240), ["Color Theme"] = Color3.fromRGB(8,8,8), ["Color Text"] = Color3.fromRGB(248,248,248), ["Color Dark Text"] = Color3.fromRGB(180,150,255), ["Transparency"] = 0.26}
+SH_lib.Themes.Light = {["Color Hub 1"] = ColorSequence.new({ColorSequenceKeypoint.new(0, Color3.fromRGB(90,180,255)), ColorSequenceKeypoint.new(1, Color3.fromRGB(60,120,240))}), ["Color Hub 2"] = Color3.fromRGB(80,160,240), ["Color Stroke"] = Color3.fromRGB(120,180,230), ["Color Theme"] = Color3.fromRGB(245,245,245), ["Color Text"] = Color3.fromRGB(18,18,18), ["Color Dark Text"] = Color3.fromRGB(80,80,80), ["Transparency"] = 0.02}
+SH_lib.Settings.SaveFile = "SH_lib_config.json"
+SH_lib.Settings.DefaultTheme = "Darker"
+SH_lib.Settings.DefaultSize = {600,420}
+SH_lib.Settings.DefaultTabSize = 180
+SH_lib.Flags.AutoSave = true
+local function writefile_safe(path, content) if type(writefile) == "function" then pcall(function() writefile(path, content) end) end end
+local function readfile_safe(path) if type(readfile) == "function" and isfile and isfile(path) then local ok,c = pcall(function() return readfile(path) end) if ok then return c end end return nil end
+function SH_lib:_tween(obj, info, props) local ok,t = pcall(function() return TweenService:Create(obj, info, props) end) if ok and t then t:Play() return t end return nil end
+function SH_lib:_clamp(v,a,b) return math.clamp(v,a,b) end
+function SH_lib:LoadSettings() local raw = readfile_safe(self.Settings.SaveFile) if raw then local decoded = safeDecode(raw) if type(decoded) == "table" then if decoded.Theme and self.Themes[decoded.Theme] then self.Settings.Theme = decoded.Theme else self.Settings.Theme = self.Settings.Theme or self.Settings.DefaultTheme end if decoded.UISize then self.Settings.UISize = decoded.UISize end if decoded.TabSize then self.Settings.TabSize = decoded.TabSize end if decoded.Flags and type(decoded.Flags) == "table" then for k,v in pairs(decoded.Flags) do self.Flags[k] = v end end end else self.Settings.Theme = self.Settings.Theme or self.Settings.DefaultTheme self.Settings.UISize = self.Settings.UISize or self.Settings.DefaultSize self.Settings.TabSize = self.Settings.TabSize or self.Settings.DefaultTabSize end end
+function SH_lib:SaveSettings() if not self.Flags.AutoSave then return end local data = {Theme = self.Settings.Theme, UISize = self.Settings.UISize, TabSize = self.Settings.TabSize, Flags = self.Flags} writefile_safe(self.Settings.SaveFile, safeEncode(data)) end
+function SH_lib:CreateScreen(name) local sg = Instance.new("ScreenGui") sg.Name = name or "SH_lib_SG" sg.ResetOnSpawn = false sg.Parent = CoreGui return sg end
+function SH_lib:ApplyThemeToDescendants(gui, theme) for _,v in ipairs(gui:GetDescendants()) do if v:IsA("TextLabel") or v:IsA("TextButton") or v:IsA("TextBox") then pcall(function() v.TextColor3 = theme["Color Text"] end) end if v:IsA("ImageLabel") or v:IsA("ImageButton") then pcall(function() v.ImageColor3 = theme["Color Dark Text"] end) end if v:IsA("Frame") and v.Name == "SH_switch" then pcall(function() v.BackgroundColor3 = theme["Color Stroke"] end) end end end
+function SH_lib:CreateWindow(config)
+    local cfg = config or {}
+    local win = setmetatable({Elements = {}, Flags = {}, Meta = {}}, mt)
+    win.Name = cfg.Name or ("SH_Window_"..tostring(math.random(1000,9999)))
+    win.Settings = {Theme = cfg.Theme or self.Settings.Theme or self.Settings.DefaultTheme, UISize = cfg.UISize or {self.Settings.UISize[1] or self.Settings.DefaultSize[1], self.Settings.UISize[2] or self.Settings.DefaultSize[2]}, TabSize = cfg.TabSize or self.Settings.TabSize or self.Settings.DefaultTabSize, Title = cfg.Title or "SH UI"}
+    win.ScreenGui = self:CreateScreen(win.Name)
+    win.ScreenGui:SetAttribute("SH_lib", true)
+    local main = Instance.new("Frame", win.ScreenGui)
+    main.Name = "SH_Main"
+    main.AnchorPoint = Vector2.new(0.5, 0.5)
+    main.Position = UDim2.new(0.5, 0, 0.5, 0)
+    main.Size = UDim2.new(0, 0, 0, 0)
+    main.ClipsDescendants = true
+    main.BackgroundColor3 = self.Themes[win.Settings.Theme]["Color Theme"]
+    main.BackgroundTransparency = self.Themes[win.Settings.Theme]["Transparency"] or 0.2
+    main.BorderSizePixel = 0
+    Instance.new("UICorner", main).CornerRadius = UDim.new(0, 12)
+    local stroke = Instance.new("UIStroke", main)
+    stroke.Color = self.Themes[win.Settings.Theme]["Color Stroke"]
+    stroke.Thickness = 1.2
+    stroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+    stroke.Transparency = 0.35
+    local sidebar = Instance.new("Frame", main)
+    sidebar.Name = "SH_Sidebar"
+    sidebar.Size = UDim2.new(0, win.Settings.TabSize, 1, 0)
+    sidebar.BackgroundColor3 = self.Themes[win.Settings.Theme]["Color Theme"]
+    sidebar.BackgroundTransparency = 0.45
+    Instance.new("UICorner", sidebar).CornerRadius = UDim.new(0, 12)
+    local title = Instance.new("TextLabel", sidebar)
+    title.Size = UDim2.new(1, 0, 0, 48)
+    title.Position = UDim2.new(0, 0, 0, 0)
+    title.BackgroundTransparency = 1
+    title.Text = win.Settings.Title
+    title.TextColor3 = self.Themes[win.Settings.Theme]["Color Text"]
+    title.Font = Enum.Font.GothamBold
+    title.TextSize = 18
+    title.TextXAlignment = Enum.TextXAlignment.Left
+    local close = Instance.new("ImageButton", main)
+    close.Size = UDim2.new(0, 20, 0, 20)
+    close.Position = UDim2.new(1, -30, 0, 12)
+    close.AnchorPoint = Vector2.new(0, 0)
+    close.BackgroundTransparency = 1
+    close.Image = self.Icons["x"] or ""
+    close.ImageColor3 = self.Themes[win.Settings.Theme]["Color Dark Text"]
+    close.MouseButton1Click:Connect(function()
+        local t = SH_lib:_tween(main, TweenInfo.new(0.45, Enum.EasingStyle.Back, Enum.EasingDirection.In), {Size = UDim2.new(0,0,0,0)})
+        if t then t.Completed:Connect(function() pcall(function() win.ScreenGui:Destroy() end) end) end
+    end)
+    local tabHolder = Instance.new("ScrollingFrame", sidebar)
+    tabHolder.Size = UDim2.new(1, 0, 1, -60)
+    tabHolder.Position = UDim2.new(0, 0, 0, 48)
+    tabHolder.BackgroundTransparency = 1
+    tabHolder.ScrollBarThickness = 0
+    local uiList = Instance.new("UIListLayout", tabHolder)
+    uiList.Padding = UDim.new(0, 6)
+    uiList.HorizontalAlignment = Enum.HorizontalAlignment.Center
+    local pageHolder = Instance.new("Frame", main)
+    pageHolder.Name = "SH_PageHolder"
+    pageHolder.Position = UDim2.new(0, win.Settings.TabSize + 12, 0, 48)
+    pageHolder.Size = UDim2.new(1, -win.Settings.TabSize - 24, 1, -60)
+    pageHolder.BackgroundTransparency = 1
+    win.Main = main
+    win.Sidebar = sidebar
+    win.TabHolder = tabHolder
+    win.PageHolder = pageHolder
+    local dragging = false
+    local dragStart, origin
+    main.InputBegan:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 then
+            dragging = true
+            dragStart = input.Position
+            origin = main.Position
+            input.Changed:Connect(function()
+                if input.UserInputState == Enum.UserInputState.End then dragging = false end
+            end)
+        end
+    end)
+    UserInputService.InputChanged:Connect(function(input)
+        if dragging and input.UserInputType == Enum.UserInputType.MouseMovement then
+            local delta = input.Position - dragStart
+            main.Position = UDim2.new(origin.X.Scale, origin.X.Offset + delta.X, origin.Y.Scale, origin.Y.Offset + delta.Y)
+        end
+    end)
+    SH_lib:_tween(main, TweenInfo.new(0.6, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {Size = UDim2.new(0, win.Settings.UISize[1], 0, win.Settings.UISize[2])})
+    SH_lib:ApplyThemeToDescendants(win.ScreenGui, SH_lib.Themes[win.Settings.Theme])
+    function win:CreateTab(text, icon)
+        local btn = Instance.new("TextButton", tabHolder)
+        btn.Size = UDim2.new(0.9, 0, 0, 34)
+        btn.BackgroundTransparency = 1
+        btn.Text = "     " .. text
+        btn.TextColor3 = SH_lib.Themes[win.Settings.Theme]["Color Dark Text"]
+        btn.Font = Enum.Font.GothamMedium
+        btn.TextSize = 13
+        btn.TextXAlignment = Enum.TextXAlignment.Left
+        Instance.new("UICorner", btn).CornerRadius = UDim.new(0, 6)
+        local il = Instance.new("ImageLabel", btn)
+        il.Size = UDim2.new(0, 18, 0, 18)
+        il.Position = UDim2.new(0, 8, 0.5, -9)
+        il.BackgroundTransparency = 1
+        il.Image = SH_lib.Icons[icon] or ""
+        il.ImageColor3 = SH_lib.Themes[win.Settings.Theme]["Color Dark Text"]
+        local page = Instance.new("ScrollingFrame", pageHolder)
+        page.Size = UDim2.new(1, 0, 1, 0)
+        page.BackgroundTransparency = 1
+        page.Visible = false
+        page.ScrollBarThickness = 6
+        page.ScrollBarImageColor3 = SH_lib.Themes[win.Settings.Theme]["Color Stroke"]
+        local listLayout = Instance.new("UIListLayout", page)
+        listLayout.Padding = UDim.new(0, 8)
+        btn.MouseButton1Click:Connect(function()
+            for _,v in ipairs(pageHolder:GetChildren()) do if v:IsA("ScrollingFrame") then v.Visible = false end end
+            for _,b in ipairs(tabHolder:GetChildren()) do
+                if b:IsA("TextButton") then
+                    pcall(function() SH_lib:_tween(b, TweenInfo.new(0.25), {BackgroundTransparency = 1, TextColor3 = SH_lib.Themes[win.Settings.Theme]["Color Dark Text"]}) end)
+                    if b:FindFirstChildOfClass("ImageLabel") then pcall(function() SH_lib:_tween(b.ImageLabel, TweenInfo.new(0.25), {ImageColor3 = SH_lib.Themes[win.Settings.Theme]["Color Dark Text"]}) end) end
+                end
+            end
+            page.Visible = true
+            pcall(function() SH_lib:_tween(btn, TweenInfo.new(0.25), {BackgroundTransparency = 0.8, TextColor3 = SH_lib.Themes[win.Settings.Theme]["Color Text"]}) end)
+            pcall(function() SH_lib:_tween(il, TweenInfo.new(0.25), {ImageColor3 = SH_lib.Themes[win.Settings.Theme]["Color Text"]}) end)
+        end)
+        local elements = {}
+        function elements:AddSection(t)
+            local sec = Instance.new("TextLabel", page)
+            sec.Size = UDim2.new(1, -14, 0, 20)
+            sec.BackgroundTransparency = 1
+            sec.Text = t
+            sec.TextColor3 = SH_lib.Themes[win.Settings.Theme]["Color Text"]
+            sec.Font = Enum.Font.GothamBold
+            sec.TextSize = 12
+            sec.TextXAlignment = Enum.TextXAlignment.Left
+        end
+        function elements:AddButton(t, cb)
+            local b = Instance.new("TextButton", page)
+            b.Size = UDim2.new(1, -14, 0, 36)
+            b.BackgroundColor3 = SH_lib.Themes[win.Settings.Theme]["Color Theme"]
+            b.BackgroundTransparency = 0.45
+            b.Text = "   " .. t
+            b.TextColor3 = SH_lib.Themes[win.Settings.Theme]["Color Text"]
+            b.Font = Enum.Font.Gotham
+            b.TextSize = 13
+            b.TextXAlignment = Enum.TextXAlignment.Left
+            Instance.new("UICorner", b).CornerRadius = UDim.new(0, 6)
+            local ic = Instance.new("ImageLabel", b)
+            ic.Size = UDim2.new(0, 16, 0, 16)
+            ic.Position = UDim2.new(1, -26, 0.5, -8)
+            ic.BackgroundTransparency = 1
+            ic.Image = SH_lib.Icons["mousepointerclick"]
+            ic.ImageColor3 = SH_lib.Themes[win.Settings.Theme]["Color Dark Text"]
+            b.MouseButton1Click:Connect(function()
+                SH_lib:_tween(b, TweenInfo.new(0.12), {BackgroundTransparency = 0.2})
+                task.wait(0.08)
+                SH_lib:_tween(b, TweenInfo.new(0.12), {BackgroundTransparency = 0.45})
+                pcall(function() cb() end)
+            end)
+        end
+        function elements:AddToggle(t, def, cb)
+            local state = def and true or false
+            local f = Instance.new("TextButton", page)
+            f.Size = UDim2.new(1, -14, 0, 38)
+            f.BackgroundColor3 = SH_lib.Themes[win.Settings.Theme]["Color Theme"]
+            f.BackgroundTransparency = 0.45
+            f.Text = "   " .. t
+            f.TextColor3 = SH_lib.Themes[win.Settings.Theme]["Color Text"]
+            f.Font = Enum.Font.Gotham
+            f.TextXAlignment = Enum.TextXAlignment.Left
+            Instance.new("UICorner", f).CornerRadius = UDim.new(0, 6)
+            local sw = Instance.new("Frame", f)
+            sw.Name = "SH_switch"
+            sw.Size = UDim2.new(0, 36, 0, 18)
+            sw.Position = UDim2.new(1, -48, 0.5, -9)
+            sw.BackgroundColor3 = state and SH_lib.Themes[win.Settings.Theme]["Color Stroke"] or Color3.fromRGB(38,38,38)
+            Instance.new("UICorner", sw).CornerRadius = UDim.new(1, 0)
+            local cir = Instance.new("Frame", sw)
+            cir.Size = UDim2.new(0, 14, 0, 14)
+            cir.Position = state and UDim2.new(1, -16, 0.5, -7) or UDim2.new(0, 2, 0.5, -7)
+            cir.BackgroundColor3 = Color3.new(1,1,1)
+            Instance.new("UICorner", cir).CornerRadius = UDim.new(1, 0)
+            f.MouseButton1Click:Connect(function()
+                state = not state
+                SH_lib:_tween(sw, TweenInfo.new(0.18), {BackgroundColor3 = state and SH_lib.Themes[win.Settings.Theme]["Color Stroke"] or Color3.fromRGB(38,38,38)})
+                SH_lib:_tween(cir, TweenInfo.new(0.18), {Position = state and UDim2.new(1, -16, 0.5, -7) or UDim2.new(0, 2, 0.5, -7)})
+                pcall(function() cb(state) end)
+            end)
+            return {Set = function(_, v) state = v sw.BackgroundColor3 = state and SH_lib.Themes[win.Settings.Theme]["Color Stroke"] or Color3.fromRGB(38,38,38) cir.Position = state and UDim2.new(1, -16, 0.5, -7) or UDim2.new(0,2,0.5,-7) end, Get = function() return state end}
+        end
+        function elements:AddSlider(t, min, max, def, cb, flt)
+            local s = Instance.new("Frame", page)
+            s.Size = UDim2.new(1, -14, 0, 56)
+            s.BackgroundColor3 = SH_lib.Themes[win.Settings.Theme]["Color Theme"]
+            s.BackgroundTransparency = 0.45
+            Instance.new("UICorner", s).CornerRadius = UDim.new(0, 6)
+            local title = Instance.new("TextLabel", s)
+            title.Size = UDim2.new(1, 0, 0, 22)
+            title.BackgroundTransparency = 1
+            title.Text = "   " .. t
+            title.TextColor3 = SH_lib.Themes[win.Settings.Theme]["Color Text"]
+            title.Font = Enum.Font.Gotham
+            title.TextXAlignment = Enum.TextXAlignment.Left
+            local val = Instance.new("TextLabel", s)
+            val.Size = UDim2.new(0, 54, 0, 22)
+            val.Position = UDim2.new(1, -60, 0, 0)
+            val.BackgroundTransparency = 1
+            val.TextColor3 = SH_lib.Themes[win.Settings.Theme]["Color Stroke"]
+            val.Font = Enum.Font.Gotham
+            val.Text = tostring(def)
+            local bar = Instance.new("Frame", s)
+            bar.Size = UDim2.new(0.9, 0, 0, 6)
+            bar.Position = UDim2.new(0.05, 0, 0.78, 0)
+            bar.BackgroundColor3 = Color3.fromRGB(30,30,30)
+            local fill = Instance.new("Frame", bar)
+            local ratio = 0
+            if max > min then ratio = (def - min) / (max - min) end
+            fill.Size = UDim2.new(ratio, 0, 1, 0)
+            fill.BackgroundColor3 = SH_lib.Themes[win.Settings.Theme]["Color Stroke"]
+            Instance.new("UICorner", fill)
+            bar.InputBegan:Connect(function(i)
+                if i.UserInputType == Enum.UserInputType.MouseButton1 then
+                    local conn; conn = RunService.RenderStepped:Connect(function()
+                        local loc = UserInputService:GetMouseLocation()
+                        local perc = SH_lib:_clamp((loc.X - bar.AbsolutePosition.X) / bar.AbsoluteSize.X, 0, 1)
+                        fill.Size = UDim2.new(perc, 0, 1, 0)
+                        local value = min + (max - min) * perc
+                        if not flt then value = math.floor(value) end
+                        val.Text = tostring(value)
+                        pcall(function() cb(value) end)
+                    end)
+                    local econn; econn = UserInputService.InputEnded:Connect(function(inp)
+                        if inp.UserInputType == Enum.UserInputType.MouseButton1 then
+                            if conn then conn:Disconnect() end
+                            if econn then econn:Disconnect() end
+                        end
+                    end)
+                end
+            end)
+            return {Set = function(_, v) local perc = (v - min) / (max - min) if perc ~= perc then perc = 0 end fill.Size = UDim2.new(SH_lib:_clamp(perc,0,1),0,1,0) val.Text = tostring(v) pcall(function() cb(v) end) end}
+        end
+        function elements:AddDropdown(t, list, cb, searchable)
+            local dd = Instance.new("Frame", page)
+            dd.Size = UDim2.new(1, -14, 0, 36)
+            dd.BackgroundColor3 = SH_lib.Themes[win.Settings.Theme]["Color Theme"]
+            dd.BackgroundTransparency = 0.45
+            dd.ClipsDescendants = true
+            Instance.new("UICorner", dd).CornerRadius = UDim.new(0, 6)
+            local title = Instance.new("TextButton", dd)
+            title.Size = UDim2.new(1, 0, 1, 0)
+            title.BackgroundTransparency = 1
+            title.Text = "   " .. t
+            title.TextColor3 = SH_lib.Themes[win.Settings.Theme]["Color Text"]
+            title.Font = Enum.Font.Gotham
+            title.TextXAlignment = Enum.TextXAlignment.Left
+            local icon = Instance.new("ImageLabel", title)
+            icon.Size = UDim2.new(0, 16, 0, 16)
+            icon.Position = UDim2.new(1, -26, 0.5, -8)
+            icon.BackgroundTransparency = 1
+            icon.Image = SH_lib.Icons["chevrondown"]
+            icon.ImageColor3 = SH_lib.Themes[win.Settings.Theme]["Color Dark Text"]
+            local open = false
+            title.MouseButton1Click:Connect(function()
+                open = not open
+                local newH = open and (36 + (#list * 26)) or 36
+                SH_lib:_tween(dd, TweenInfo.new(0.24), {Size = UDim2.new(1, -14, 0, newH)})
+                SH_lib:_tween(icon, TweenInfo.new(0.24), {Rotation = open and 180 or 0})
+            end)
+            local function rebuild(filter)
+                for _,c in pairs(dd:GetChildren()) do if c.Name == "Opt" then c:Destroy() end end
+                local idx = 0
+                for i,v in ipairs(list) do
+                    if not filter or tostring(v):lower():find(filter:lower()) then
+                        idx = idx + 1
+                        local opt = Instance.new("TextButton", dd)
+                        opt.Name = "Opt"
+                        opt.Size = UDim2.new(1, -8, 0, 24)
+                        opt.Position = UDim2.new(0, 4, 0, 36 + (idx - 1) * 24)
+                        opt.BackgroundTransparency = 1
+                        opt.Text = tostring(v)
+                        opt.TextColor3 = SH_lib.Themes[win.Settings.Theme]["Color Dark Text"]
+                        opt.Font = Enum.Font.Gotham
+                        opt.TextXAlignment = Enum.TextXAlignment.Left
+                        opt.MouseButton1Click:Connect(function()
+                            pcall(function() cb(v) end)
+                            title.Text = "   " .. t .. " : " .. tostring(v)
+                            open = false
+                            SH_lib:_tween(dd, TweenInfo.new(0.24), {Size = UDim2.new(1, -14, 0, 36)})
+                            SH_lib:_tween(icon, TweenInfo.new(0.24), {Rotation = 0})
+                        end)
+                    end
+                end
+            end
+            if searchable then
+                local sbox = Instance.new("TextBox", dd)
+                sbox.Size = UDim2.new(1, -40, 0, 26)
+                sbox.Position = UDim2.new(0, 6, 0, 36)
+                sbox.BackgroundColor3 = Color3.fromRGB(30,30,30)
+                sbox.TextColor3 = SH_lib.Themes[win.Settings.Theme]["Color Text"]
+                sbox.Font = Enum.Font.Gotham
+                sbox.PlaceholderText = "search"
+                Instance.new("UICorner", sbox)
+                rebuild()
+                sbox:GetPropertyChangedSignal("Text"):Connect(function()
+                    rebuild(sbox.Text)
+                end)
+            else
+                rebuild()
+            end
+        end
+        function elements:AddTextBox(t, def, cb)
+            local fr = Instance.new("Frame", page)
+            fr.Size = UDim2.new(1, -14, 0, 44)
+            fr.BackgroundColor3 = SH_lib.Themes[win.Settings.Theme]["Color Theme"]
+            fr.BackgroundTransparency = 0.45
+            Instance.new("UICorner", fr).CornerRadius = UDim.new(0, 6)
+            local lab = Instance.new("TextLabel", fr)
+            lab.Size = UDim2.new(0.4, 0, 1, 0)
+            lab.BackgroundTransparency = 1
+            lab.Text = "   " .. t
+            lab.TextColor3 = SH_lib.Themes[win.Settings.Theme]["Color Text"]
+            lab.Font = Enum.Font.Gotham
+            lab.TextXAlignment = Enum.TextXAlignment.Left
+            local input = Instance.new("TextBox", fr)
+            input.Size = UDim2.new(0.55, 0, 0.72, 0)
+            input.Position = UDim2.new(0.43, 0, 0.14, 0)
+            input.BackgroundColor3 = Color3.fromRGB(30,30,30)
+            input.Text = def or ""
+            input.TextColor3 = SH_lib.Themes[win.Settings.Theme]["Color Text"]
+            input.Font = Enum.Font.Gotham
+            Instance.new("UICorner", input)
+            input.FocusLost:Connect(function(enter)
+                if enter then pcall(function() cb(input.Text) end) end
+            end)
+        end
+        function elements:AddKeybind(t, def, cb)
+            local fr = Instance.new("Frame", page)
+            fr.Size = UDim2.new(1, -14, 0, 36)
+            fr.BackgroundColor3 = SH_lib.Themes[win.Settings.Theme]["Color Theme"]
+            fr.BackgroundTransparency = 0.45
+            Instance.new("UICorner", fr).CornerRadius = UDim.new(0, 6)
+            local lab = Instance.new("TextLabel", fr)
+            lab.Size = UDim2.new(0.6, 0, 1, 0)
+            lab.BackgroundTransparency = 1
+            lab.Text = "   " .. t
+            lab.TextColor3 = SH_lib.Themes[win.Settings.Theme]["Color Text"]
+            lab.Font = Enum.Font.Gotham
+            lab.TextXAlignment = Enum.TextXAlignment.Left
+            local btn = Instance.new("TextButton", fr)
+            btn.Size = UDim2.new(0.34, 0, 0.8, 0)
+            btn.Position = UDim2.new(0.64, 0, 0.1, 0)
+            btn.Text = def and tostring(def) or "None"
+            btn.Font = Enum.Font.Gotham
+            btn.TextColor3 = SH_lib.Themes[win.Settings.Theme]["Color Dark Text"]
+            Instance.new("UICorner", btn)
+            local key = def
+            local listening = false
+            btn.MouseButton1Click:Connect(function()
+                if listening then return end
+                listening = true
+                btn.Text = "..."
+                local conn
+                conn = UserInputService.InputBegan:Connect(function(inp, gpe)
+                    if gpe then return end
+                    if inp.KeyCode then
+                        key = inp.KeyCode
+                        btn.Text = tostring(key):gsub("Enum.KeyCode.", "")
+                        listening = false
+                        conn:Disconnect()
+                    end
+                end)
+            end)
+            local connKey
+            connKey = UserInputService.InputBegan:Connect(function(inp, gpe)
+                if gpe then return end
+                if key and inp.KeyCode == key then pcall(function() cb() end) end
+            end)
+            return {Set = function(_, k) key = k btn.Text = tostring(k) end, Destroy = function() if connKey then connKey:Disconnect() end end}
+        end
+        function elements:AddColorPicker(t, def, cb)
+            local fr = Instance.new("Frame", page)
+            fr.Size = UDim2.new(1, -14, 0, 68)
+            fr.BackgroundColor3 = SH_lib.Themes[win.Settings.Theme]["Color Theme"]
+            fr.BackgroundTransparency = 0.45
+            Instance.new("UICorner", fr).CornerRadius = UDim.new(0, 6)
+            local lab = Instance.new("TextLabel", fr)
+            lab.Size = UDim2.new(1, 0, 0, 22)
+            lab.BackgroundTransparency = 1
+            lab.Text = "   " .. t
+            lab.TextColor3 = SH_lib.Themes[win.Settings.Theme]["Color Text"]
+            lab.Font = Enum.Font.Gotham
+            lab.TextXAlignment = Enum.TextXAlignment.Left
+            local preview = Instance.new("Frame", fr)
+            preview.Size = UDim2.new(0, 36, 0, 36)
+            preview.Position = UDim2.new(1, -46, 0, 26)
+            preview.BackgroundColor3 = def or Color3.fromRGB(255,255,255)
+            Instance.new("UICorner", preview).CornerRadius = UDim.new(0, 6)
+            local r = Instance.new("TextBox", fr)
+            r.Size = UDim2.new(0.28, 0, 0, 20)
+            r.Position = UDim2.new(0, 8, 0, 36)
+            r.BackgroundColor3 = Color3.fromRGB(30,30,30)
+            r.Text = def and tostring(math.floor(def.R * 255)) or "255"
+            r.TextColor3 = SH_lib.Themes[win.Settings.Theme]["Color Text"]
+            r.Font = Enum.Font.Gotham
+            Instance.new("UICorner", r)
+            local g = r:Clone()
+            g.Parent = fr
+            g.Position = UDim2.new(0.28, 10, 0, 36)
+            g.Text = def and tostring(math.floor(def.G * 255)) or "255"
+            local b = r:Clone()
+            b.Parent = fr
+            b.Position = UDim2.new(0.56, 20, 0, 36)
+            b.Text = def and tostring(math.floor(def.B * 255)) or "255"
+            local function apply()
+                local rr = tonumber(r.Text) or 255
+                local gg = tonumber(g.Text) or 255
+                local bb = tonumber(b.Text) or 255
+                rr = math.clamp(rr, 0, 255)
+                gg = math.clamp(gg, 0, 255)
+                bb = math.clamp(bb, 0, 255)
+                local col = Color3.fromRGB(rr, gg, bb)
+                preview.BackgroundColor3 = col
+                pcall(function() cb(col) end)
+            end
+            r.FocusLost:Connect(apply)
+            g.FocusLost:Connect(apply)
+            b.FocusLost:Connect(apply)
+            return {Set = function(_, col) if typeof(col) == "Color3" then preview.BackgroundColor3 = col r.Text = tostring(math.floor(col.R * 255)) g.Text = tostring(math.floor(col.G * 255)) b.Text = tostring(math.floor(col.B * 255)) pcall(function() cb(col) end) end end}
+        end
+        function elements:AddSeparator()
+            local s = Instance.new("Frame", page)
+            s.Size = UDim2.new(1, -14, 0, 8)
+            s.BackgroundTransparency = 1
+            local l = Instance.new("Frame", s)
+            l.Size = UDim2.new(1, 0, 0, 1)
+            l.Position = UDim2.new(0, 0, 0.5, -0.5)
+            l.BackgroundColor3 = SH_lib.Themes[win.Settings.Theme]["Color Stroke"]
+            l.BackgroundTransparency = 0.6
+        end
+        function elements:AddLabel(txt)
+            local l = Instance.new("TextLabel", page)
+            l.Size = UDim2.new(1, -14, 0, 20)
+            l.BackgroundTransparency = 1
+            l.Text = txt
+            l.TextColor3 = SH_lib.Themes[win.Settings.Theme]["Color Text"]
+            l.Font = Enum.Font.Gotham
+            l.TextXAlignment = Enum.TextXAlignment.Left
+            l.TextSize = 12
+            return {Set = function(_, v) l.Text = v end}
+        end
+        return elements
+    end
+    function win:SetTheme(name)
+        if SH_lib.Themes[name] then
+            win.Settings.Theme = name
+            main.BackgroundColor3 = SH_lib.Themes[name]["Color Theme"]
+            main.BackgroundTransparency = SH_lib.Themes[name]["Transparency"] or 0.2
+            sidebar.BackgroundColor3 = SH_lib.Themes[name]["Color Theme"]
+            title.TextColor3 = SH_lib.Themes[name]["Color Text"]
+            close.ImageColor3 = SH_lib.Themes[name]["Color Dark Text"]
+            SH_lib:ApplyThemeToDescendants(win.ScreenGui, SH_lib.Themes[name])
+        end
+    end
+    function win:Save(path)
+        local data = {Theme = win.Settings.Theme, UISize = {win.Main.Size.X.Offset, win.Main.Size.Y.Offset}, TabSize = win.Sidebar.Size.X.Offset}
+        writefile_safe(path or ("SH_window_" .. win.Name .. ".json"), safeEncode(data))
+    end
+    function win:Load(path)
+        local raw = readfile_safe(path or ("SH_window_" .. win.Name .. ".json"))
+        if not raw then raw = readfile_safe(SH_lib.Settings.SaveFile) end
+        if raw then
+            local dec = safeDecode(raw)
+            if type(dec) == "table" then
+                if dec.Theme and SH_lib.Themes[dec.Theme] then win:SetTheme(dec.Theme) end
+                if dec.UISize then win.Main.Size = UDim2.new(0, dec.UISize[1], 0, dec.UISize[2]) end
+                if dec.TabSize then win.Sidebar.Size = UDim2.new(0, dec.TabSize, 1, 0) end
+            end
+        end
+    end
+    function win:CreateModal(titleTxt, bodyTxt)
+        local sg = Instance.new("ScreenGui", CoreGui)
+        sg.Name = "SH_Modal_" .. win.Name
+        sg.ResetOnSpawn = false
+        local f = Instance.new("Frame", sg)
+        f.Size = UDim2.new(0, 420, 0, 200)
+        f.Position = UDim2.new(0.5, -210, 0.5, -100)
+        f.AnchorPoint = Vector2.new(0.5, 0.5)
+        f.BackgroundColor3 = SH_lib.Themes[win.Settings.Theme]["Color Theme"]
+        f.BackgroundTransparency = SH_lib.Themes[win.Settings.Theme]["Transparency"] or 0.25
+        Instance.new("UICorner", f).CornerRadius = UDim.new(0, 8)
+        local t = Instance.new("TextLabel", f)
+        t.Size = UDim2.new(1, 0, 0, 42)
+        t.BackgroundTransparency = 1
+        t.Text = titleTxt or ""
+        t.TextColor3 = SH_lib.Themes[win.Settings.Theme]["Color Text"]
+        t.Font = Enum.Font.GothamBold
+        t.TextSize = 16
+        local body = Instance.new("TextLabel", f)
+        body.Size = UDim2.new(1, -20, 1, -64)
+        body.Position = UDim2.new(0, 10, 0, 42)
+        body.BackgroundTransparency = 1
+        body.Text = bodyTxt or ""
+        body.TextColor3 = SH_lib.Themes[win.Settings.Theme]["Color Text"]
+        body.Font = Enum.Font.Gotham
+        local ok = Instance.new("TextButton", f)
+        ok.Size = UDim2.new(0, 100, 0, 30)
+        ok.Position = UDim2.new(1, -110, 1, -40)
+        ok.Text = "Okay"
+        ok.Font = Enum.Font.Gotham
+        ok.BackgroundColor3 = SH_lib.Themes[win.Settings.Theme]["Color Hub 2"]
+        Instance.new("UICorner", ok).CornerRadius = UDim.new(0, 6)
+        ok.MouseButton1Click:Connect(function() pcall(function() sg:Destroy() end) end)
+        return {Gui = sg, Close = function() pcall(function() sg:Destroy() end) end}
+    end
+    function win:CreateContextMenu(items)
+        local menu = Instance.new("Frame", win.ScreenGui)
+        menu.Size = UDim2.new(0, 160, 0, 20)
+        menu.Position = UDim2.new(0, 0, 0, 0)
+        menu.BackgroundColor3 = SH_lib.Themes[win.Settings.Theme]["Color Theme"]
+        menu.BackgroundTransparency = SH_lib.Themes[win.Settings.Theme]["Transparency"] or 0.25
+        Instance.new("UICorner", menu).CornerRadius = UDim.new(0, 6)
+        menu.Visible = false
+        for i,v in ipairs(items) do
+            local btn = Instance.new("TextButton", menu)
+            btn.Size = UDim2.new(1, 0, 0, 26)
+            btn.Position = UDim2.new(0, 0, 0, (i-1) * 26)
+            btn.BackgroundTransparency = 1
+            btn.Text = v[1]
+            btn.TextColor3 = SH_lib.Themes[win.Settings.Theme]["Color Text"]
+            btn.Font = Enum.Font.Gotham
+            btn.MouseButton1Click:Connect(function() pcall(function() v[2]() end) end)
+        end
+        local function open(x,y)
+            menu.Position = UDim2.new(0, x, 0, y)
+            menu.Visible = true
+        end
+        local function close() menu.Visible = false end
+        return {Open = open, Close = close}
+    end
+    function win:CreateConsole()
+        local sg = Instance.new("ScreenGui", CoreGui)
+        sg.Name = "SH_Console_" .. win.Name
+        sg.ResetOnSpawn = false
+        local f = Instance.new("Frame", sg)
+        f.Size = UDim2.new(0, 540, 0, 300)
+        f.Position = UDim2.new(0.5, -270, 0.5, -150)
+        f.AnchorPoint = Vector2.new(0.5, 0.5)
+        f.BackgroundColor3 = SH_lib.Themes[win.Settings.Theme]["Color Theme"]
+        f.BackgroundTransparency = SH_lib.Themes[win.Settings.Theme]["Transparency"] or 0.25
+        Instance.new("UICorner", f).CornerRadius = UDim.new(0, 6)
+        local out = Instance.new("ScrollingFrame", f)
+        out.Size = UDim2.new(1, -10, 1, -60)
+        out.Position = UDim2.new(0, 5, 0, 5)
+        out.BackgroundTransparency = 1
+        out.ScrollBarThickness = 6
+        local list = Instance.new("UIListLayout", out)
+        list.Padding = UDim.new(0, 4)
+        local input = Instance.new("TextBox", f)
+        input.Size = UDim2.new(1, -10, 0, 30)
+        input.Position = UDim2.new(0, 5, 1, -40)
+        input.BackgroundColor3 = Color3.fromRGB(30,30,30)
+        input.TextColor3 = SH_lib.Themes[win.Settings.Theme]["Color Text"]
+        input.Font = Enum.Font.Code
+        Instance.new("UICorner", input)
+        local function push(msg, col)
+            local l = Instance.new("TextLabel", out)
+            l.Size = UDim2.new(1, 0, 0, 18)
+            l.BackgroundTransparency = 1
+            l.Text = msg
+            l.TextColor3 = col or SH_lib.Themes[win.Settings.Theme]["Color Text"]
+            l.Font = Enum.Font.Gotham
+            l.TextXAlignment = Enum.TextXAlignment.Left
+            out.CanvasSize = UDim2.new(0, 0, 0, list.AbsoluteContentSize + 8)
+        end
+        input.FocusLost:Connect(function(enter)
+            if enter then
+                local cmd = input.Text
+                push("> " .. cmd, SH_lib.Themes[win.Settings.Theme]["Color Stroke"])
+                spawn(function()
+                    local ok, res = pcall(function() return loadstring(cmd)() end)
+                    if ok then push(tostring(res), Color3.fromRGB(120,200,120)) else push(tostring(res), Color3.fromRGB(200,120,120)) end
+                end)
+                input.Text = ""
+            end
+        end)
+        return {Push = push, Gui = sg}
+    end
+    table.insert(SH_lib.Windows, win)
+    return win
+end
+function SH_lib:Notify(text, dur)
+    dur = dur or 3
+    table.insert(self._notifQueue, {Text = text, Dur = dur})
+    if self._notifRunning then return end
+    self._notifRunning = true
+    spawn(function()
+        while #self._notifQueue > 0 do
+            local n = table.remove(self._notifQueue, 1)
+            local sg = Instance.new("ScreenGui", CoreGui)
+            sg.Name = "SH_Notify"
+            sg.ResetOnSpawn = false
+            local f = Instance.new("Frame", sg)
+            f.Size = UDim2.new(0, 300, 0, 50)
+            f.Position = UDim2.new(1, -320, 0, 20)
+            f.BackgroundColor3 = SH_lib.Themes[SH_lib.Settings.Theme or SH_lib.Settings.DefaultTheme]["Color Theme"]
+            f.BackgroundTransparency = SH_lib.Themes[SH_lib.Settings.Theme or SH_lib.Settings.DefaultTheme]["Transparency"] or 0.2
+            Instance.new("UICorner", f).CornerRadius = UDim.new(0, 6)
+            local l = Instance.new("TextLabel", f)
+            l.Size = UDim2.new(1, -20, 1, -20)
+            l.Position = UDim2.new(0, 10, 0, 10)
+            l.BackgroundTransparency = 1
+            l.Text = n.Text
+            l.TextColor3 = SH_lib.Themes[SH_lib.Settings.Theme or SH_lib.Settings.DefaultTheme]["Color Text"]
+            l.Font = Enum.Font.Gotham
+            l.TextSize = 14
+            SH_lib:_tween(f, TweenInfo.new(0.4, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {Position = UDim2.new(1, -320, 0, 20)})
+            task.wait(n.Dur or 3)
+            local t = SH_lib:_tween(f, TweenInfo.new(0.35, Enum.EasingStyle.Back, Enum.EasingDirection.In), {Position = UDim2.new(1, 10, 0, 20)})
+            if t then t.Completed:Wait() end
+            pcall(function() sg:Destroy() end)
+        end
+        SH_lib._notifRunning = false
+    end)
+end
+function SH_lib:CreateProfile(name)
+    if not name then return end
+    self.Profiles[name] = {Flags = {}, Settings = {Theme = self.Settings.Theme, UISize = self.Settings.UISize, TabSize = self.Settings.TabSize}}
+    return self.Profiles[name]
+end
+function SH_lib:LoadProfile(name)
+    if not name then return end
+    local p = self.Profiles[name]
+    if not p then return end
+    if p.Settings and p.Settings.Theme and self.Themes[p.Settings.Theme] then self.Settings.Theme = p.Settings.Theme end
+    if p.Settings and p.Settings.UISize then self.Settings.UISize = p.Settings.UISize end
+    if p.Settings and p.Settings.TabSize then self.Settings.TabSize = p.Settings.TabSize end
+    for k,v in pairs(p.Flags or {}) do self.Flags[k] = v end
+    self:SaveSettings()
+end
+function SH_lib:RegisterEvent(name, fn)
+    if type(fn) ~= "function" then return end
+    if not self.Events[name] then self.Events[name] = {} end
+    table.insert(self.Events[name], fn)
+    return {Disconnect = function() for i,f in ipairs(self.Events[name]) do if f == fn then table.remove(self.Events[name], i) break end end end}
+end
+function SH_lib:FireEvent(name, ...)
+    if not self.Events[name] then return end
+    for _,fn in ipairs(self.Events[name]) do spawn(function() pcall(fn, ...) end) end
+end
+return SH_lib
+-- by Shadow
+-- Test
