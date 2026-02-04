@@ -3,7 +3,7 @@ from flask import Flask, request, redirect
 
 app = Flask(__name__)
 
-TOKEN = "8410134111:AAEtvLTBFE_5uLobXsm_HYvvhqiBMXs6Ifg"
+TOKEN = ""
 ADMIN_ID = "8334245284"
 
 @app.route('/')
